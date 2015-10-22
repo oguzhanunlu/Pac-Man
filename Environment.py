@@ -15,30 +15,52 @@ class Environment(object):
 		"""Loads last saved game
 		@return: bool, True|False, whether it is loaded succesfully."""
 		
-	def addRoad(self, road, coordinate):
+	def addRoad(self, road):
 		"""Adds roads to given coordinate.
+		@param road: Road
 		@return: bool, True|False, whether road is added succesfully."""
 	
-	def deleteRoad(self, road, coordinate):
-		"""Deletes roads from given coordinate.
+	def deleteRoad(self, coordinate):
+		"""Deletes roads.
+		@param road: Road
+		@param coordinate: Coordinate
 		@return: bool, True|False, whether road is deleted succesfully."""
 		
-	def addForage(self, forage, coordinate):
+	def addForage(self, forage):
 		"""Adds forage to  given coordinate.
+		@param forage: Apple | Potato | Banana
 		@return: bool, True|False, whether forage is added succesfully."""
 		
-	def deleteForage(self, forage, coordinate):
+	def deleteForage(self, coordinate):
 		"""Deletes forage from  given coordinate.
+		@param coordinate: Coordinate
 		@return: bool, True|False, whether forage is deleted succesfully."""		
 		
-	def addPlayer(self, player, coordinate):
+	def addPlayer(self, player):
 		"""Adds player to  given coordinate.
+		@param player: Player
 		@return: bool, True|False, whether player is added succesfully."""
 		
-	def deletePlayer(self, player, coordinate):
+	def deletePlayer(self, player):
 		"""Deletes player from  given coordinate.
+		@param player: Player
 		@return: bool, True|False, whether player is deleted succesfully."""
 		
 	def getScoreboard(self):
-		"""Returns rated player list.
+		"""Returns sorted player list.
 		@return: dict, list of players with their point"""
+		
+    def showAllPlayers(self):
+        """
+        Prints all players.
+        """
+    
+    def showAllForages(self):
+        """
+        Prints all forages.
+        """
+        
+    def showAllRoads(self):
+        """
+        Prints all roads.
+        """
