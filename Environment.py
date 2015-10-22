@@ -11,7 +11,7 @@ class Environment(object):
 		"""Saves current game state to file.
 		@return: bool, True|False,whether it is saved successfully."""
 
-	def	load(self):
+	def load(self):
 		"""Loads last saved game
 		@return: bool, True|False, whether it is loaded succesfully."""
 		
