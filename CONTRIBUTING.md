@@ -10,6 +10,7 @@ How to work
 `git pull` // bringing latest version of codebase to your local
 
 After doing some hopefully serious work,
+
 `git add -A`
 
 `git commit -m "your message"`
