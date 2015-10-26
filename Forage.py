@@ -6,8 +6,6 @@ class Forage(object):
     Potato 50 points, Only Pro players eat
     """
     
-    point = 0
-    
     def __init__(self, kind):
         """
         Creates a forage with given kind.

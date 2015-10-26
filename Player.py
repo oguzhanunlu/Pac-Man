@@ -6,8 +6,6 @@ class Player(object):
     Pro Player          :A player with point above 35  
     """
     
-    score = 0
-    
     def __init__(self, level, coordinate):
         """
         @param level: string, Beginner | Intermediate | Pro

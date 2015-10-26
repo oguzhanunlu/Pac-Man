@@ -1,7 +1,6 @@
 class Environment(object):
 	"""Creates, saves, loads map"""
 		
-	playerList={}	
 			
 	def __init__(self):	
 		"""Creates initial map with ways and forages.
@@ -46,7 +45,7 @@ class Environment(object):
 		@param player: Player
 		@return: bool, True|False, whether player is deleted succesfully."""
 		
-	def getScoreboard(self):
+    def getScoreboard(self):
 		"""Returns sorted player list.
 		@return: dict, list of players with their point"""
 		
