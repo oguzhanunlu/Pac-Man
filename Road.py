@@ -10,3 +10,4 @@ class Road(object):
         @param coordinate: Coordinate
         @return: A road instance in given coordinate
         """
+        self.coordinate=coordinate

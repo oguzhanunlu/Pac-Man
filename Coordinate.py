@@ -9,3 +9,6 @@ class Coordinate(object):
         @param y: y-coordinate
         @return: A coordinate instance with given values
         """
+        self.x=x
+        self.y=y
+        
