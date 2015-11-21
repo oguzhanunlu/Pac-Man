@@ -12,3 +12,5 @@ class Forage(object):
         @param kind: string, Apple | Banana | Potato 
         @return: A forage instance of given kind
         """
+        
+        self.kind = kind
