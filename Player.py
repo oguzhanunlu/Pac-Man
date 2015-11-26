@@ -24,12 +24,13 @@ class Ghost(Player):
     """
     A type of player.
     """
-    def __init__(self, level, coordinate):
+    def __init__(self, point, level, coordinate):
         """
         @param level: string, Beginner | Intermediate | Pro
         @param coordinate: Coordinate
         @return : A ghost instance 
         """
+        self.point = 0
         self.level = level
         self.coordinate = coordinate      
     
@@ -42,12 +43,13 @@ class Pacman(Player):
     """
     A type of player.
     """
-    def __init__(self, level, coordinate):
+    def __init__(self, point, level, coordinate):
         """
         @param level: Number, 1 |2 | 3
         @param coordinate: Coordinate
         @return : A player instance 
         """
+        self.point = 0
         self.level = level
         self.coordinate = coordinate       
     
