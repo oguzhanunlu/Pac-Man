@@ -24,14 +24,15 @@ class Ghost(Player):
     """
     A type of player.
     """
-    def __init__(self, point, level, coordinate):
+    def __init__(self, point,coordinate):
         """
         @param level: string, Beginner | Intermediate | Pro
         @param coordinate: Coordinate
         @return : A ghost instance 
         """
+        self.type="ghost"
         self.point = 0
-        self.level = level
+        self.level = -1
         self.coordinate = coordinate      
     
     def canEatPlayer(self, player):
@@ -49,6 +50,7 @@ class Pacman(Player):
         @param coordinate: Coordinate
         @return : A player instance 
         """
+        self.type="pacman"
         self.point = 0
         self.level = level
         self.coordinate = coordinate       
@@ -93,7 +95,7 @@ class PlayerFactory(object):
     """
     def new(self, name, coordinate):  
         if name == "ghost":
-            return Ghost(-1, coordinate)
+            return Ghost(0,coordinate)
         else:
-            return Pacman(1, coordinate)
+            return Pacman(0,1, coordinate)
     
