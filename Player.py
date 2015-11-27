@@ -1,6 +1,6 @@
-#TODO level up-down 
+#TODO level down 
 
-import Environment as env
+from Environment import Environment as env
 
 class Player(object):
     """
@@ -100,7 +100,7 @@ class Ghost(Player):
                 pass
             else:
                 self.coordinate.y -= 1
-                
+    	            
     def canEatPlayer(self, player):
         if not player.level == 3:
             return False
@@ -127,6 +127,7 @@ class Pacman(Player):
         Moves user in given direction by 1 road, a square.
         @param direction: string, Up | Down | Right | Left
         """
+
         if direction == "Right":
             if self.coordinate.x + 1 == 1000:
                 pass
@@ -270,14 +271,21 @@ class Pacman(Player):
                     pass
             else:
                 self.coordinate.y -= 1
-                
+              
+		self.levelChanger()
+		
+
     
-    def levelUp(self):
-        if self.level != 3:
-            self.level += 1
-    
-    def levelDown(self):
-        self.level -= 1
+    def levelChanger(self):
+		if self.point<5:
+			self.level = 1
+		elif self.point>5 and self.point<35:
+			self.level = 2
+			
+		else :
+			self.level = 3
+#    def levelDown(self):	gerek kalmayabilir
+#       self.level -= 1
     
     def canEatGhost(self, ghost):
         if self.level == 3:
@@ -310,7 +318,7 @@ class PlayerFactory(object):
     """
     Factory design pattern to specify type of players.
     """
-    def new(self,name, ptype, coordinate):  
+    def new(self,name, ptype,point,level, coordinate):  
         if ptype == "ghost":
             return Ghost(name,0,coordinate)
         else:
