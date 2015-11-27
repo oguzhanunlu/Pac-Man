@@ -4,13 +4,13 @@ class Forage(object):
     The object players try to eat on map.
     Apple: 1 point, Beginner & Intermediate & Pro players can eat
     Banana 25 points, Only Intermediate & Pro players can eat
-    Potato 50 points, Only Pro players eat
+    Tomato 50 points, Only Pro players eat
     """
     
     def __init__(self, kind):
         """
         Creates a forage with given kind.
-        @param kind: string, Apple | Banana | Potato 
+        @param kind: string, Apple | Banana | Tomato 
         @return: A forage instance of given kind
         """
         
@@ -31,10 +31,10 @@ class Banana(Forage):
 		self.point=25
 		self.coordinate=coordinate
 
-class Potato(Forage):        
+class Tomato(Forage):        
 
 	def __init__(self,coordinate):
-		self.kind="Potato"
+		self.kind="Tomato"
 		self.point=50
 		self.coordinate=coordinate
 				
@@ -61,4 +61,4 @@ class ForageFactory(object):
         elif name == "banana":
         	return Banana(coordinate)
         else:
-            return Potato(coordinate)
+            return Tomato(coordinate)

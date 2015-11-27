@@ -11,4 +11,4 @@ class Coordinate(object):
         """
         self.x=x
         self.y=y
-        
+        self.key=str(x)+'.'+str(y)
