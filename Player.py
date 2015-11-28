@@ -52,13 +52,12 @@ class Pacman(Player):
 	
     
     def levelChanger(self):
-		if self.point<5:
-			self.level = 1
-		elif self.point>5 and self.point<35:
-			self.level = 2
-			
-		else :
-			self.level = 3
+        if self.point<5:
+            self.level = 1
+        elif self.point>5 and self.point<35:
+			self.level = 2			
+        else:
+            self.level = 3
 #    def levelDown(self):	gerek kalmayabilir
 #       self.level -= 1
     

@@ -81,6 +81,7 @@ class Environment(object):
 	    @return: bool, True|False, whether player is deleted succesfully."""
 	    del self.playerDict[player.coordinate.key]
 	    self.map[player.coordinate.x][player.coordinate.y]='r'
+	    del player
 	
     def mapGenerator(self):
         for i in range(0,40,10):
@@ -89,7 +90,9 @@ class Environment(object):
         for i in range(0,40,10):
             for j in range(0,40):
                 self.map[j][i] = 'r'	    	        
-	    
+	    self.map[39] = ['r']*40
+	    for j in range(0,40):
+                self.map[j][39] = 'r'
     def sendPlayerRandom(self, player):
         i = random.randrange(0,4)
         i *= 10
@@ -172,6 +175,7 @@ class Environment(object):
                         self.map[player.coordinate.x-1][player.coordinate.y] = 'r'
                     else:
                         self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point+=player.point
+                        self.map[player.coordinate.x][player.coordinate.y] = 'r'
                         self.deletePlayer(player)
                 elif self.map[player.coordinate.x+1][player.coordinate.y] == 'A' or  self.map[player.coordinate.x+1][player.coordinate.y] == 'B' or  self.map[player.coordinate.x+1][player.coordinate.y] == 'T':
                     return
@@ -199,6 +203,7 @@ class Environment(object):
                         self.map[player.coordinate.x][player.coordinate.y-1] = 'r'
                     else:
                         self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point+=player.point
+                        self.map[player.coordinate.x][player.coordinate.y] = 'r'
                         self.deletePlayer(player)
                 elif self.map[player.coordinate.x][player.coordinate.y+1] == 'A' or  self.map[player.coordinate.x][player.coordinate.y+1] == 'B' or  self.map[player.coordinate.x][player.coordinate.y+1] == 'T':
                     return
@@ -215,7 +220,6 @@ class Environment(object):
                 elif self.map[player.coordinate.x-1][player.coordinate.y] == 'P':
                     
                     if player.canEatPlayer(self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)]):
-                        
                         player.point += self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point 
                         self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point /= 2
                         if self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point < 5:
@@ -229,6 +233,7 @@ class Environment(object):
                         self.map[player.coordinate.x+1][player.coordinate.y] = 'r'
                     else:
                         self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point+=player.point
+                        self.map[player.coordinate.x][player.coordinate.y] = 'r'
                         self.deletePlayer(player)
                 elif self.map[player.coordinate.x-1][player.coordinate.y] == 'A' or  self.map[player.coordinate.x-1][player.coordinate.y] == 'B' or  self.map[player.coordinate.x-1][player.coordinate.y] == 'T':
                     return
@@ -252,7 +257,6 @@ class Environment(object):
                             
                             self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)])
                         else:
-                            
                             self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].levelChanger()
                             self.sendPlayerRandom(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)])
                         player.coordinate.y -= 1
@@ -261,6 +265,7 @@ class Environment(object):
                         self.map[player.coordinate.x][player.coordinate.y+1] = 'r'
                     else:
                         self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point+=player.point
+                        self.map[player.coordinate.x][player.coordinate.y] = 'r'
                         self.deletePlayer(player)
                 elif self.map[player.coordinate.x][player.coordinate.y-1] == 'A' or  self.map[player.coordinate.x][player.coordinate.y-1] == 'B' or  self.map[player.coordinate.x][player.coordinate.y-1] == 'T':
                     return
@@ -274,8 +279,13 @@ class Environment(object):
             if direction == "Down":
                 if player.coordinate.x + 1 == 40:
                     return
-                elif self.map[player.coordinate.x+1][player.coordinate.y] == 'P' or self.map[player.coordinate.x+1][player.coordinate.y] == 'X':
+                elif self.map[player.coordinate.x+1][player.coordinate.y] == 'P': 
                     return
+                elif self.map[player.coordinate.x+1][player.coordinate.y] == 'X':
+                    if player.level == 3:
+                        player.coordinate.x += 1
+                        self.map[player.coordinate.x][player.coordinate.y] = "P"
+                        self.map[player.coordinate.x-1][player.coordinate.y] = "r" 
                 elif self.map[player.coordinate.x+1][player.coordinate.y] == 'G':
                     if player.canEatGhost(self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)]):
                         player.point += self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point 
@@ -337,8 +347,13 @@ class Environment(object):
             elif direction == "Right":
                 if player.coordinate.y + 1 == 40:
                     return
-                elif self.map[player.coordinate.x][player.coordinate.y+1] == 'P' or self.map[player.coordinate.x][player.coordinate.y+1] == 'X':
+                elif self.map[player.coordinate.x][player.coordinate.y+1] == 'P': 
                     return
+                elif self.map[player.coordinate.x][player.coordinate.y+1] == 'X':
+                    if player.level == 3:
+                        player.coordinate.y += 1
+                        self.map[player.coordinate.x][player.coordinate.y] = "P"
+                        self.map[player.coordinate.x][player.coordinate.y-1] = "r"
                 elif self.map[player.coordinate.x][player.coordinate.y+1] == 'G':
                     if player.canEatGhost(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)]):
                         player.point += self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point 
@@ -357,7 +372,6 @@ class Environment(object):
                             self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)].levelChanger()
                             self.map[player.coordinate.x][player.coordinate.y] = 'r'
                             self.sendPlayerRandom(player)
-                        # ghost pacmani yedi, pacmani random bir yere tasi
                         
                 elif self.map[player.coordinate.x][player.coordinate.y+1] == 'P':
                     return
@@ -405,8 +419,13 @@ class Environment(object):
             elif direction == "Up":
                 if player.coordinate.x - 1 == -1:
                     return
-                elif self.map[player.coordinate.x-1][player.coordinate.y] == 'P' or self.map[player.coordinate.x-1][player.coordinate.y] == 'X':
+                elif self.map[player.coordinate.x-1][player.coordinate.y] == 'P': 
                     return
+                elif self.map[player.coordinate.x-1][player.coordinate.y] == 'X':
+                    if player.level == 3:
+                        player.coordinate.x -= 1
+                        self.map[player.coordinate.x][player.coordinate.y] = "P"
+                        self.map[player.coordinate.x+1][player.coordinate.y] = "r"
                 elif self.map[player.coordinate.x-1][player.coordinate.y] == 'G':
                     
                     if player.canEatGhost(self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)]):
@@ -474,8 +493,13 @@ class Environment(object):
             else:
                 if player.coordinate.y - 1 == -1:
                     return
-                elif self.map[player.coordinate.x][player.coordinate.y-1] == 'P' or self.map[player.coordinate.x][player.coordinate.y-1] == 'X':
+                elif self.map[player.coordinate.x][player.coordinate.y-1] == 'P': 
                     return
+                elif self.map[player.coordinate.x][player.coordinate.y-1] == 'X':
+                    if player.level == 3:
+                        player.coordinate.y -= 1
+                        self.map[player.coordinate.x][player.coordinate.y] = "P"
+                        self.map[player.coordinate.x][player.coordinate.y+1] = "r"
                 elif self.map[player.coordinate.x][player.coordinate.y-1] == 'G':
                     if player.canEatGhost(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)]):
                         player.point += self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point 
@@ -533,4 +557,4 @@ class Environment(object):
                     self.map[player.coordinate.x][player.coordinate.y] = 'P'
                     self.map[player.coordinate.x][player.coordinate.y+1] = 'r'
                   
-		    player.levelChanger()
+            player.levelChanger()
