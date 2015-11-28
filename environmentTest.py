@@ -67,13 +67,14 @@ print
 # player window
 #######################################
 
-c1 = Coordinate(20,10)
+c1 = Coordinate(10,10)
 p = PlayerFactory().new("p","Pacman",0,1,c1) 
 p.point = 15
 p.level = 2
 env.addPlayer(p)
+env.getAllMap()
 env.getMap(p,5,5)
-
+print "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 #######################################
 # player move
 #######################################
@@ -92,10 +93,24 @@ env.move(p,"Down")
 env.getAllMap()
 print
 """
-
+env.getAllMap()
+print p.coordinate.x,p.coordinate.y
+env.move(p,"Down")
+print
+env.getAllMap()
+print p.coordinate.x,p.coordinate.y
+env.move(p,"Down")
+env.getAllMap()
+print
+env.move(p,"Down")
+env.getAllMap()
+print
 env.move(p,"Up")
-print env.map[p.coordinate.x][p.coordinate.y]
+env.getAllMap()
+print
+print p.coordinate.x,p.coordinate.y
 print env.map[p.coordinate.x+5][p.coordinate.y]
+print p.coordinate.x,p.coordinate.y
 env.getAllMap()
 print
 """

@@ -14,7 +14,7 @@ class Environment(object):
         self.forageDict = {}
         self.roadDict = {}
         #self.map = [['X','X','X','X'],['X','X','X','X'],['X','X','X','X'],['X','X','X','X']]
-        self.map = [['X']*40]*40
+        self.map = [["X" for i in xrange(40)] for i in xrange(40)]
 		
     def save(self):
 	    """Saves current game state to file.
@@ -262,10 +262,13 @@ class Environment(object):
         elif player.type == "Pacman":
             if direction == "Down":
                 if player.coordinate.x + 1 == 1000:
+                    print "down1"
                     return
                 elif self.map[player.coordinate.x+1][player.coordinate.y] == 'P' or self.map[player.coordinate.x+1][player.coordinate.y] == 'X':
+                    print "down2"
                     return
                 elif self.map[player.coordinate.x+1][player.coordinate.y] == 'G':
+                    print "down3"
                     if player.canEatGhost(self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)]):
                         player.point += self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point 
                         self.deletePlayer(self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)])
@@ -284,8 +287,10 @@ class Environment(object):
                         # ghost pacmani yedi, pacmani random bir yere tasi
                         
                 elif self.map[player.coordinate.x+1][player.coordinate.y] == 'P':
+                    print "down4"
                     return
                 elif self.map[player.coordinate.x+1][player.coordinate.y] == 'A':
+                    print "down5"
                     if player.canEatForage(self.forageDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)]):
                         player.point += self.forageDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point 
                         self.deleteForage(self.forageDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)])
@@ -295,6 +300,7 @@ class Environment(object):
                     else:
                         return
                 elif self.map[player.coordinate.x+1][player.coordinate.y] == 'B':
+                    print "down6"
                     if player.canEatForage(self.forageDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)]):
                         player.point += self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point 
                         self.deleteForage(self.forageDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)])
@@ -304,6 +310,7 @@ class Environment(object):
                     else:
                         return
                 elif self.map[player.coordinate.x+1][player.coordinate.y] == 'T':
+                    print "down7"
                     if player.canEatForage(self.forageDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)]):
                         player.point += self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point 
                         self.deleteForage(self.forageDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)])
@@ -313,6 +320,7 @@ class Environment(object):
                     else:
                         return
                 else:
+                    print "down8"
                     player.coordinate.x += 1
                     self.map[player.coordinate.x][player.coordinate.y] = 'P'
                     self.map[player.coordinate.x-1][player.coordinate.y] = 'r'
