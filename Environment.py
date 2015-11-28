@@ -135,7 +135,7 @@ class Environment(object):
         x1 = player.coordinate.x - width
         x2 = player.coordinate.x + width
         y1 = player.coordinate.y - height
-        y2 = player.coordinate.x + height
+        y2 = player.coordinate.y + height
 
         if x1 <= 0:
             x1 = 0
@@ -149,7 +149,6 @@ class Environment(object):
             for j in range(y1,y2+1):
                 print self.map[i][j],
             print
-
     def move(self, player, direction):
         if player.type == "Ghost":
             if direction == "Down":
@@ -434,6 +433,7 @@ class Environment(object):
                         return
                 else:
                     player.coordinate.x -= 1
+                	print "geldim"
                     self.map[player.coordinate.x][player.coordinate.y] = 'P'
                     self.map[player.coordinate.x+1][player.coordinate.y] = 'r'
                 

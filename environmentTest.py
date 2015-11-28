@@ -40,7 +40,7 @@ p2.point = 20
 p2.level = 2
 env.getAllMap()
 print
-env.deletePlayer(p1)
+env.deletePlayer(p2)
 env.getAllMap()
 print
 
@@ -62,6 +62,7 @@ print
 env.deleteForage(f1)
 env.getAllMap()
 print
+
 #######################################
 # player window
 #######################################
@@ -78,15 +79,19 @@ env.getMap(p,5,5)
 #######################################
 
 # 4 direction test
+"""
 env.move(p,"Right")
 env.getAllMap()
 print
+
 env.move(p,"Left")
 env.getAllMap()
 print
+"""
 env.move(p,"Down")
 env.getAllMap()
 print
+"""
 env.move(p,"Up")
 env.getAllMap()
 print
@@ -173,3 +178,4 @@ print
 env.printDict(env.forageDict)
 print
 env1.printDict(env1.forageDict)
+"""
