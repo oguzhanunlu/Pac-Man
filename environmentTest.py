@@ -87,15 +87,18 @@ print
 env.move(p,"Left")
 env.getAllMap()
 print
-"""
+
 env.move(p,"Down")
 env.getAllMap()
 print
 """
+
 env.move(p,"Up")
+print env.map[p.coordinate.x][p.coordinate.y]
+print env.map[p.coordinate.x+5][p.coordinate.y]
 env.getAllMap()
 print
-
+"""
 # wall test
 env.move(p2,"Left")
 env.getAllMap()

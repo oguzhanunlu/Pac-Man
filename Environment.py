@@ -128,7 +128,7 @@ class Environment(object):
             for j in range(0,40):
                 print self.map[i][j],
             print
-        
+   
     def getMap(self, player, width, height):
         """
         Returns all players."""
@@ -433,10 +433,9 @@ class Environment(object):
                         return
                 else:
                     player.coordinate.x -= 1
-                	print "geldim"
                     self.map[player.coordinate.x][player.coordinate.y] = 'P'
                     self.map[player.coordinate.x+1][player.coordinate.y] = 'r'
-                
+                    
            
            
            
@@ -495,6 +494,7 @@ class Environment(object):
                         return
                 else:
                     player.coordinate.y -= 1
+
                     self.map[player.coordinate.x][player.coordinate.y] = 'P'
                     self.map[player.coordinate.x][player.coordinate.y+1] = 'r'
                   
