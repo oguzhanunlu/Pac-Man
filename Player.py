@@ -24,13 +24,13 @@ class Ghost(Player):
         """
         self.name=name
         self.type="Ghost"
-        self.point = 0
+        self.point = point
         self.level = -1
         self.coordinate = coordinate      
 
     	            
     def canEatPlayer(self, player):
-        if not player.level == 3:
+        if player.level == 3:
             return False
         return True
     
@@ -46,7 +46,7 @@ class Pacman(Player):
         """
         self.name=name
         self.type="Pacman"
-        self.point = 0
+        self.point = point
         self.level = level
         self.coordinate = coordinate       
 	
@@ -95,7 +95,7 @@ class PlayerFactory(object):
     """
     def new(self,name, ptype,point,level, coordinate):  
         if ptype == "Ghost":
-            return Ghost(name,0,coordinate)
+            return Ghost(name,point,coordinate)
         else:
-            return Pacman(name,0,1, coordinate)
+            return Pacman(name,point,level, coordinate)
     

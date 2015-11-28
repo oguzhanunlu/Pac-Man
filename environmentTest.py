@@ -81,90 +81,172 @@ print "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 
 # 4 direction test
 """
-env.move(p,"Right")
-env.getAllMap()
-print
-
-env.move(p,"Left")
-env.getAllMap()
-print
-
-env.move(p,"Down")
-env.getAllMap()
-print
-"""
 env.getAllMap()
 print p.coordinate.x,p.coordinate.y
 env.move(p,"Down")
+print p.coordinate.x,p.coordinate.y
+print p.coordinate.key
 print
+
 env.getAllMap()
 print p.coordinate.x,p.coordinate.y
-env.move(p,"Down")
-env.getAllMap()
-print
-env.move(p,"Down")
-env.getAllMap()
-print
 env.move(p,"Up")
+print p.coordinate.x,p.coordinate.y
+print p.coordinate.key
 env.getAllMap()
 print
+
+env.getAllMap()
 print p.coordinate.x,p.coordinate.y
-print env.map[p.coordinate.x+5][p.coordinate.y]
+env.move(p,"Right")
 print p.coordinate.x,p.coordinate.y
+print p.coordinate.key
+env.getAllMap()
+
+print
+env.getAllMap()
+print p.coordinate.x,p.coordinate.y
+env.move(p,"Left")
+print p.coordinate.x,p.coordinate.y
+print p.coordinate.key
 env.getAllMap()
 print
+
+
 """
 # wall test
+p2=PlayerFactory().new("p2","Ghost",0,-1,c2)
+env.addPlayer(p2)
+p2.point = 20
+p2.level = 2
+c1=Coordinate(39,10)
+p1=PlayerFactory().new("p1","Pacman",0,1,c1) 
+env.addPlayer(p1)
+"""
 env.move(p2,"Left")
-env.getAllMap()
-print
-env.move(p2,"Up")
+print p2.coordinate.x,p2.coordinate.y
+print p2.coordinate.key
 env.getAllMap()
 print
 
-# eat forage 
+env.move(p2,"Up")
+print p2.coordinate.x,p2.coordinate.y
+print p2.coordinate.key
+env.getAllMap()
+print
+"
+env.move(p1,"Right")
+print p1.coordinate.x,p1.coordinate.y
+print p1.coordinate.key
+env.getAllMap()
+print
+"
+env.move(p1,"Down")
+print p1.coordinate.x,p1.coordinate.y
+print p1.coordinate.key
+env.getAllMap()
+print
+
+# Forage Test
+# ghost can not eat pacman
+env.addForage(f1)
+env.getAllMap()
+print "point of p2 before eating forage",p2.point
 env.move(p2,"Right")
 env.getAllMap()
 print "point of p2 after eating f1 ", p2.point
+print p2.coordinate.x,p2.coordinate.y,p2.coordinate.key
 print
 
-# can not eat tomato
-c4 = Coordinate(1,0)
-f3=ForageFactory().new("Tomato",c4) 
+#pacman can eat forage
+c4 = Coordinate(38,10)
+f3=ForageFactory().new("Apple",c4) 
+print "before move p1 point:",p1.point
+print "coordinates and key:",p1.coordinate.x,p1.coordinate.y,p1.coordinate.key
 env.addForage(f3)
-env.move(p2,"Down")
+env.move(p1,"Up")
+env.getAllMap()
+print "after move p1 point:",p1.point
+print "coordinates and key:",p1.coordinate.x,p1.coordinate.y,p1.coordinate.key
+print
+
+#pacman can not eat tomato
+c4 = Coordinate(38,10)
+f3=ForageFactory().new("Tomato",c4) 
+print "before move p1 point:",p1.point
+print "coordinates and key:",p1.coordinate.x,p1.coordinate.y,p1.coordinate.key
+env.addForage(f3)
+env.move(p1,"Up")
+env.getAllMap()
+print "after move p1 point:",p1.point
+print "coordinates and key:",p1.coordinate.x,p1.coordinate.y,p1.coordinate.key
+print
+"""
+# pacman can not eat ghost hataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaasdad
+c5 = Coordinate(11,10)
+p4 = PlayerFactory().new("p4","Ghost",0,-1,c5)
+env.addPlayer(p4)
 env.getAllMap()
 print
-
-# pacman can not eat ghost
-c5 = Coordinate(21,10)
-p4 = PlayerFactory().new("p4","Ghost",0,-1,c5)
 env.move(p,"Down")
 env.getAllMap()
+print p.coordinate.x,p.coordinate.y,p.coordinate.key
 print
-
+"""
 # pacman can eat ghost
-c6 = Coordinate(22,10)
+c5 = Coordinate(11,10)
+p4 = PlayerFactory().new("p4","Ghost",0,-1,c5)
+env.addPlayer(p4)
+c6 = Coordinate(12,10)
 p5 = PlayerFactory().new("p5","Pacman",40,3,c6)
-env.move(p,"Up")
+env.addPlayer(p5)
+print p5.level
 env.getAllMap()
-print
-
-# ghost can not eat pacman
-c7 = Coordinate(23,10)
-p6 = PlayerFactory().new("p6","Ghost",0,-1,c7)
+print "after move"
 env.move(p5,"Up")
 env.getAllMap()
 print
 
-# ghost can eat pacman
-env.deleteForage(f3) # clean (1,0)
-c8 = Coordinate(1,0)
-p7 = PlayerFactory().new("p5","Pacman",40,3,c8)
-env.move(p,"Up")
+# ghost can not eat pacman
+c6 = Coordinate(12,10)
+p5 = PlayerFactory().new("p5","Pacman",45,3,c6)
+print p5.level
+print p5.point
+env.addPlayer(p5)
+c7 = Coordinate(13,10)
+p6 = PlayerFactory().new("p6","Ghost",10,-1,c7)
+env.addPlayer(p6)
 env.getAllMap()
+print "after move"
+env.move(p6,"Up")
+env.getAllMap()
+print "ghost point:", p5.point
 print
 
+# ghost can eat pacman and pacman dies
+p.level=1
+p.point=3
+c8 = Coordinate(10,11)
+p7 = PlayerFactory().new("p5","Ghost",15,-1,c8)
+env.addPlayer(p7)
+env.getAllMap()
+env.move(p7,"Left")
+print "after move"
+env.getAllMap()
+print p7.point
+
+#ghost can eat pacman and pacman don't dies
+p.level=2
+p.point=15
+c8 = Coordinate(10,11)
+p7 = PlayerFactory().new("p5","Ghost",15,-1,c8)
+env.addPlayer(p7)
+env.getAllMap()
+env.move(p7,"Left")
+print "after move"
+env.getAllMap()
+print p7.point
+print p.coordinate.x,p.coordinate.y,p.coordinate.key
 
 #######################################
 # get scoreboard
