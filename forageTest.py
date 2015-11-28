@@ -5,9 +5,9 @@ c1=Coordinate(4,5)
 c2=Coordinate(1,65)
 c3=Coordinate(71,9)
 
-f1=ForageFactory().new("apple",c1)
-f2=ForageFactory().new("banana",c2)
-f3=ForageFactory().new("tomato",c3)
+f1=ForageFactory().new("Apple",c1)
+f2=ForageFactory().new("Banana",c2)
+f3=ForageFactory().new("Tomato",c3)
 
 print "forage type:",f1.kind
 print "forage point:",f1.point

@@ -56,9 +56,9 @@ class ForageFactory(object):
     Factory design pattern to specify type of players.
     """
     def new(self, name, coordinate):  
-        if name == "apple":
+        if name == "Apple":
             return Apple( coordinate)
-        elif name == "banana":
+        elif name == "Banana":
         	return Banana(coordinate)
-        else:
+        elif name == "Tomato":
             return Tomato(coordinate)
