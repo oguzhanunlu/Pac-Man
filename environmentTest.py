@@ -43,7 +43,7 @@ print
 env.deletePlayer(p2)
 env.getAllMap()
 print
-
+"""
 #######################################
 # forage add-delete
 #######################################
@@ -62,7 +62,8 @@ print
 env.deleteForage(f1)
 env.getAllMap()
 print
-
+"""
+"""
 #######################################
 # player window
 #######################################
@@ -75,6 +76,7 @@ env.addPlayer(p)
 env.move(p,"Down")
 env.getAllMap()
 env.getMap(p,5,5)
+"""
 #######################################
 # player move
 #######################################
@@ -111,8 +113,8 @@ print p.coordinate.x,p.coordinate.y
 print p.coordinate.key
 env.getAllMap()
 print
-
-
+"""
+print "here"
 # breaking the wall test
 c12 = Coordinate(11,10)
 p12 = PlayerFactory().new("p12","Pacman",0,3,c12) 
@@ -131,7 +133,7 @@ env.getAllMap()
 print
 
 
-
+"""
 # border test
 p2=PlayerFactory().new("p2","Ghost",0,-1,c2)
 env.addPlayer(p2)
