@@ -1,4 +1,3 @@
-#TODO level down 
 
 from Environment import Environment as env
 
@@ -27,7 +26,7 @@ class Ghost(Player):
         self.point = point
         self.level = -1
         self.coordinate = coordinate      
-
+        self.frame=[["Q" for i in xrange(11)] for i in xrange(11)]
     	            
     def canEatPlayer(self, player):
         if player.level == 3:
@@ -49,7 +48,7 @@ class Pacman(Player):
         self.point = point
         self.level = level
         self.coordinate = coordinate       
-	
+        self.frame=[["Q" for i in xrange(11)] for i in xrange(11)]
     
     def levelChanger(self):
         if self.point<5:

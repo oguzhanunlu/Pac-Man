@@ -15,6 +15,7 @@ class Environment(object):
         self.roadDict = {}
         #self.map = [['X','X','X','X'],['X','X','X','X'],['X','X','X','X'],['X','X','X','X']]
         self.map = [["X" for i in xrange(40)] for i in xrange(40)]
+        self.usernames = []
 		
     def save(self):
 	    """Saves current game state to file.
@@ -74,6 +75,7 @@ class Environment(object):
 	    if  self.map[player.coordinate.x][player.coordinate.y]=='r':
 	    	self.playerDict[player.coordinate.key]=player
 	    	self.map[player.coordinate.x][player.coordinate.y]=player.type[0]
+	    	self.usernames.append(player.name)
 	    
     def deletePlayer(self, player):
 	    """Deletes player from  given coordinate.
@@ -150,10 +152,12 @@ class Environment(object):
             y1 = 0
         if y2 > 39:
             y2 = 39
-        for i in range(x1,x2+1):
-            for j in range(y1,y2+1):
-                print self.map[i][j],
-            print
+        for i,k in zip(range(x1,x2+1),range(2*width+1)):
+            for j,l in zip(range(y1,y2+1),range(2*height+1)):
+                player.frame[k][l] = self.map[i][j],
+        return player.frame
+        
+        
     def move(self, player, direction):
         if player.type == "Ghost":
             if direction == "Down":
