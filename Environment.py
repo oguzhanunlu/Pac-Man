@@ -120,8 +120,6 @@ class Environment(object):
         list1 = list(reversed(playerNameList))
         list2 = list(reversed(playerPointList))
 
-        for p in xrange(len(list1)):
-            print list1[p], list2[p]
 
         return [list1,list2]
     
@@ -152,6 +150,7 @@ class Environment(object):
             y1 = 0
         if y2 > 39:
             y2 = 39
+            
         for i,k in zip(range(x1,x2+1),range(2*width+1)):
             for j,l in zip(range(y1,y2+1),range(2*height+1)):
                 player.frame[k][l] = self.map[i][j],

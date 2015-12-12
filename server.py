@@ -10,23 +10,6 @@ import time
 import json
 
 
-
-def randomCoordinate(kind):
-    while(1):
-      i = random.randrange(0,4)
-      i *= 10
-      j = random.randrange(0,40)
-      try:
-         if(kind == "Ghost"):
-            if(env.map[i][j] == "r" and env.map[i][j+1] != "P" and env.map[i][j+2] != "P" and env.map[i][j-1] != "P" and env.map[i][j-2] != "P" and env.map[i-1][j] != "P" and env.map[i-2][j] != "P" and env.map[i+1][j] != "P" and env.map[i+2][j] != "P" and env.map[i+1][j+1] != "P" and env.map[i-1][j+1] != "P" and env.map[i-1][j-1] != "P" and env.map[i+1][j-1] != "P"):
-               c=Coordinate(i,j)
-         else:
-            if(env.map[i][j] == "r" and env.map[i][j+1] != "G" and env.map[i][j+2] != "P" and env.map[i][j-1] != "G" and env.map[i][j-2] != "P" and env.map[i-1][j] != "G" and env.map[i-2][j] != "G" and env.map[i+1][j] != "G" and env.map[i+2][j] != "G" and env.map[i+1][j+1] != "P" and env.map[i-1][j+1] != "G" and env.map[i-1][j-1] != "G" and env.map[i+1][j-1] != "G"):
-               c=Coordinate(i,j)
-         return c       
-      except error:
-         continue
-
 class Agent(Thread):
    try:
       env =Environment()
@@ -39,12 +22,25 @@ class Agent(Thread):
       self.address = address
       self.server = server
          
-         
-         
+   def randomCoordinate(self,kind):
+       while(1):
+         i = random.randrange(0,4)
+         i *= 10
+         j = random.randrange(0,40)
+         if(kind == "Ghost"):
+            if(self.env.map[i][j] == "r" and self.env.map[i][j+1] != "P" and self.env.map[i][j+2] != "P" and self.env.map[i][j-1] != "P" and self.env.map[i][j-2] != "P" and self.env.map[i-1][j] != "P" and self.env.map[i-2][j] != "P" and self.env.map[i+1][j] != "P" and self.env.map[i+2][j] != "P" and self.env.map[i+1][j+1] != "P" and self.env.map[i-1][j+1] != "P" and self.env.map[i-1][j-1] != "P" and self.env.map[i+1][j-1] != "P"):
+               c=Coordinate(i,j)
+         else:
+            if(self.env.map[i][j] == "r" and self.env.map[i][j+1] != "G" and self.env.map[i][j+2] != "P" and self.env.map[i][j-1] != "G" and self.env.map[i][j-2] != "P" and self.env.map[i-1][j] != "G" and self.env.map[i-2][j] != "G" and self.env.map[i+1][j] != "G" and self.env.map[i+2][j] != "G" and self.env.map[i+1][j+1] != "P" and self.env.map[i-1][j+1] != "G" and self.env.map[i-1][j-1] != "G" and self.env.map[i+1][j-1] != "G"):
+               c=Coordinate(i,j)
+         return c       
+
+
    def run(self):
       while 1:
          self.inp = self.connection.recv(10000)
          self.command = self.inp.split(' ')
+         
          if self.command[0] =="Quit":
             #save game
             self.connection.send("Successfully closed.")
@@ -52,22 +48,39 @@ class Agent(Thread):
          elif (self.command[0] =="SignUp" ):
             self.username = self.command[1]
             self.kind = self.command[2]
-            if self.username in env.usernames:
+            if self.username in self.env.usernames:
+            
                self.connection.send("This username already exists.")
+               print "ayni isim"
+               continue
             else:
-               self.c = randomCoordinate(self.kind)
+               self.c = self.randomCoordinate(self.command[2])
                print self.c.x,self.c.y
                self.p = PlayerFactory().new(self.username,self.kind,0,1,self.c)
-               env.addPlayer(self.p)
-               #conn.send("Player with name "+p.name+" is created with type "+p.type+" successfully.")
-               self.a={"map":env.getMap(p,5,5),"scoreboard":env.getScoreBoard()}
+               print "buarafa"
+               self.env.addPlayer(self.p)
+             #  self.connection.send("Player is created successfully.")
+               print "geldi"
+               self.a={"map":self.env.getMap(self.p,5,5),"scoreboard":self.env.getScoreBoard()}
+               print self.a["map"]
                self.out = json.dumps(self.a,indent = 4)
                self.connection.send(self.out)
-         else:      
-            self.a={"map":env.map,"scoreboard":env.getScoreBoard()}
-            self.out = json.dumps(self.a)
-            if not self.out: break
+         elif self.command[0]=="Left" or self.command[0]=="Right" or self.command[0]=="Up" or self.command[0]=="Down":
+            self.p.frame=[["Q" for i in xrange(11)] for i in xrange(11)]
+            self.env.move(self.p,self.command[0])
+            
+            self.a={"map":self.env.getMap(self.p,5,5),"scoreboard":self.env.getScoreBoard()}
+            print self.a["map"]
+            self.out = json.dumps(self.a,indent = 4)
             self.connection.send(self.out)
+            
+            print "nevrim dondu"
+         else:
+                  
+          #  self.a={"map":self.env.map,"scoreboard":self.env.getScoreBoard()}
+           # self.out = json.dumps(self.a)
+           # if not self.out: break
+            self.connection.send("Invalid command...")
 
       self.connection.close()
    

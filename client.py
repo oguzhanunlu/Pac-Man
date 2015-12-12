@@ -10,13 +10,19 @@ while(1):
    command = inp.split(' ')
    s.send(inp)
    data=s.recv(10000)
-   if data=="Successfully closed.":
+   if data=="Invalid command...":
+      print data
+   elif data=="Successfully closed.":
       print "Good bye..."
       s.close()
       break
-   elif (data == "Player with name "+command[1]+" is created with type "+command[2]+" successfully."):
+   elif (data == "Player is created successfully."):
+      s.send("getInfo")
       print 
-      print "Welcome to game "+command[1] 
+      print "Welcome to game "+command[1]
+   elif (data == "This username already exists."):
+      print data
+      continue
    else:
       data =  json.loads(data)
       nmap= data["map"]
