@@ -23,12 +23,37 @@ while(1):
    elif (data == "This username already exists."):
       print data
       continue
-   else:
+   elif data == "Olmussun yahu":
+      print data
+      s.close()
+      break
+   elif data == "Seni yediler panpa :(":
+      print data
+      s.close()
+      break
+   else: # handling move and possibility of dead
       data =  json.loads(data)
-      nmap= data["map"]
-      for i in range (0,11):
-         for j in range (0,11):
-            print nmap[i][j][0].encode('UTF8'),
-         print
-      #print 'Received', data
+      if "message" in data:
+         print "geldim XD"
+         print data["message"]
+         nmap= data["map"]
+         for i in range (0,11):
+            for j in range (0,11):
+               print nmap[i][j][0].encode('UTF8'),
+            print
+         print "##########SCOREBOARD##########"
+         for i in range(len(data["scoreboard"][0])):
+            print data["scoreboard"][0][i], data["scoreboard"][1][i] 
+         s.close()
+      else:
+         nmap= data["map"]
+         for i in range (0,11):
+            for j in range (0,11):
+               print nmap[i][j][0].encode('UTF8'),
+            print
+         print "##########SCOREBOARD##########"
+         for i in range(len(data["scoreboard"][0])):
+            print data["scoreboard"][0][i], data["scoreboard"][1][i] 
+         
+         #print 'Received', data
 
