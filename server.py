@@ -14,6 +14,40 @@ class Agent(Thread):
    try:
       env =Environment()
       env.mapGenerator()
+      counter=0
+      while 1:
+         j = random.randrange(0,40)
+         k= random.randrange(0,40)         
+         if env.map[j][k]=='r':
+            c=Coordinate(j,k)
+            forage=ForageFactory().new("Tomato",c)
+            env.addForage(forage)
+            counter+=1
+            if counter ==10:
+               break
+      counter=0           
+      while 1:
+         j = random.randrange(0,40)
+         k= random.randrange(0,40)
+         if env.map[j][k]=='r':
+            c=Coordinate(j,k)
+            forage=ForageFactory().new("Banana",c)
+            env.addForage(forage)
+            counter+=1
+            if counter ==20:
+               break
+      counter=0           
+      while 1:
+         j = random.randrange(0,40)
+         k= random.randrange(0,40)
+         if env.map[j][k]=='r':
+            c=Coordinate(j,k)
+            forage=ForageFactory().new("Apple",c)
+            env.addForage(forage)
+            counter+=1
+            if counter ==40:
+               break        
+      env.getAllMap()             
    except:
       print "geldim XD"
    def __init__(self, connection, address, server):
