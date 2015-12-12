@@ -41,11 +41,24 @@ class Agent(Thread):
          self.inp = self.connection.recv(10000)
          self.command = self.inp.split(' ')
          
-         if self.command[0] =="Quit":
-            #save game
+         if self.command[0] =="quit":
+            with open("pickle/"+self.p.name,'wb') as f:
+               pickle.dump(self.p,f)
+            self.env.deletePlayer(self.p)
             self.connection.send("Successfully closed.")
             break
-         elif (self.command[0] =="SignUp" ):
+
+         elif (self.command[0] =="signin" ):
+            with open("pickle/"+self.command[1], 'rb') as f:
+               self.p = pickle.load(f)
+            #self.connection.send("Logged in.")
+            self.env.sendPlayerRandom(self.p)
+            self.a={"map":self.env.getMap(self.p,5,5),"scoreboard":self.env.getScoreBoard()}
+            print self.a["map"]
+            self.out = json.dumps(self.a,indent = 4)
+            self.connection.send(self.out)            
+         
+         elif (self.command[0] =="signup" ):
             self.username = self.command[1]
             self.kind = self.command[2]
             if self.username in self.env.usernames:
@@ -67,7 +80,7 @@ class Agent(Thread):
                self.connection.send(self.out)
          
          
-         elif self.command[0]=="Left" or self.command[0]=="Right" or self.command[0]=="Up" or self.command[0]=="Down":
+         elif self.command[0]=="left" or self.command[0]=="right" or self.command[0]=="up" or self.command[0]=="down":
             print "before move"
             print self.p.type, self.p.coordinate.x, self.p.coordinate.y
             print

@@ -103,6 +103,7 @@ class Environment(object):
                 player.coordinate.x = i
                 player.coordinate.y = j
                 player.coordinate.key=str(i)+'.'+str(j)
+                self.playerDict[player.coordinate.key]=player
                 self.map[i][j] = player.type[0]
                 break
 	    
@@ -159,7 +160,7 @@ class Environment(object):
         
     def move(self, player, direction):
         if player.type == "Ghost":
-            if direction == "Down":
+            if direction == "down":
                 if player.coordinate.x + 1 == 40:
                     return
                 elif self.map[player.coordinate.x+1][player.coordinate.y] == 'G' or self.map[player.coordinate.x+1][player.coordinate.y] == 'X':
@@ -192,7 +193,7 @@ class Environment(object):
                     self.map[player.coordinate.x][player.coordinate.y] = 'G'
                     self.map[player.coordinate.x-1][player.coordinate.y] = 'r'
                 
-            elif direction == "Right":
+            elif direction == "right":
                 if player.coordinate.y + 1 == 40:
                     return
                 elif self.map[player.coordinate.x][player.coordinate.y+1] == 'G' or self.map[player.coordinate.x][player.coordinate.y+1] == 'X':
@@ -225,7 +226,7 @@ class Environment(object):
                     self.map[player.coordinate.x][player.coordinate.y] = 'G'
                     self.map[player.coordinate.x][player.coordinate.y-1] = 'r'
                 
-            elif direction == "Up":
+            elif direction == "up":
                 if player.coordinate.x - 1 < 0:
                     return
                 elif self.map[player.coordinate.x-1][player.coordinate.y] == 'G' or self.map[player.coordinate.x-1][player.coordinate.y] == 'X':
@@ -296,7 +297,7 @@ class Environment(object):
                     self.map[player.coordinate.x][player.coordinate.y+1] = 'r'
                     
         elif player.type == "Pacman":
-            if direction == "Down":
+            if direction == "down":
                 if player.coordinate.x + 1 == 40:
                     return
                 elif self.map[player.coordinate.x+1][player.coordinate.y] == 'P': 
@@ -376,7 +377,7 @@ class Environment(object):
                     self.map[player.coordinate.x][player.coordinate.y] = 'P'
                     self.map[player.coordinate.x-1][player.coordinate.y] = 'r'
                 
-            elif direction == "Right":
+            elif direction == "right":
                 if player.coordinate.y + 1 == 40:
                     return
                 elif self.map[player.coordinate.x][player.coordinate.y+1] == 'P': 
@@ -460,7 +461,7 @@ class Environment(object):
            
            
            
-            elif direction == "Up":
+            elif direction == "up":
                 if player.coordinate.x - 1 == -1:
                     return
                 elif self.map[player.coordinate.x-1][player.coordinate.y] == 'P': 
