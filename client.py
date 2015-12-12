@@ -27,10 +27,7 @@ while(1):
       print data
       s.close()
       break
-   elif data == "Seni yediler panpa :(":
-      print data
-      s.close()
-      break
+
    else: # handling move and possibility of dead
       data =  json.loads(data)
       if "message" in data:

@@ -46,6 +46,13 @@ class Pacman(Player):
         self.name=name
         self.type="Pacman"
         self.point = point
+        
+        
+        
+        
+        
+        
+       
         self.level = level
         self.coordinate = coordinate       
         self.frame=[["Q" for i in xrange(11)] for i in xrange(11)]

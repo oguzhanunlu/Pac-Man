@@ -74,22 +74,15 @@ class Agent(Thread):
             self.p.frame=[["Q" for i in xrange(11)] for i in xrange(11)]
             if self.env.playerDict[str(self.p.coordinate.x)+'.'+str(self.p.coordinate.y)].type != self.p.type:
                self.connection.send("Olmussun yahu")
-            if str(self.p.coordinate.x)+'.'+str(self.p.coordinate.y) not in self.env.playerDict:
-               self.connection.send("Seni yediler panpa :(")
-            
-            self.env.move(self.p,self.command[0])
-            print "after move"
-            print self.p.type, self.p.coordinate.x, self.p.coordinate.y
-            if str(self.p.coordinate.x)+'.'+str(self.p.coordinate.y) not in self.env.playerDict:
-               print "oldum"
                self.env.usernames.remove(self.p.name)
                self.a={"message":"Ogren de gel :) AHAHAHA","map":self.env.getMap(self.p,5,5),"scoreboard":self.env.getScoreBoard()}
                print self.a["map"]
-               self.out = json.dumps(self.a,indent = 4)
-               self.connection.send(self.out)
                
             else:   
                
+               self.env.move(self.p,self.command[0])
+               print "after move"
+               print self.p.type, self.p.coordinate.x, self.p.coordinate.y
                print "bizim canimiz yanmaz gardas"
                self.a={"map":self.env.getMap(self.p,5,5),"scoreboard":self.env.getScoreBoard()}
                print self.a["map"]
@@ -104,8 +97,11 @@ class Agent(Thread):
           #  self.a={"map":self.env.map,"scoreboard":self.env.getScoreBoard()}
            # self.out = json.dumps(self.a)
            # if not self.out: break
-            self.connection.send("Invalid command...")
-
+            try:
+               self.connection.send("Invalid command...")
+            except socket.error:
+               print "Game is over for this user..."
+               break
       self.connection.close()
    
    
