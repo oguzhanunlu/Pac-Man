@@ -184,16 +184,13 @@ class Environment(object):
                         self.map[player.coordinate.x][player.coordinate.y] = 'r'
                         self.deletePlayer(player)
                 elif self.map[player.coordinate.x+1][player.coordinate.y] == 'A' or  self.map[player.coordinate.x+1][player.coordinate.y] == 'B' or  self.map[player.coordinate.x+1][player.coordinate.y] == 'T':
-                    
-                    del self.playerDict[player.coordinate.key]
                     player.coordinate.x += 1
                     player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
                     self.playerDict[player.coordinate.key] = player
+                    del self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)]
                     self.map[player.coordinate.x][player.coordinate.y] = 'G'
-                    if str(player.coordinate.x-1)+'.'+str(player.coordinate.y) in self.forageDict:
-                        self.map[player.coordinate.x-1][player.coordinate.y] = self.forageDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].kind[0]
-                    else:
-                        self.map[player.coordinate.x-1][player.coordinate.y]='r'        
+                    self.map[player.coordinate.x-1][player.coordinate.y] = 'r'
+                    del self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)]
                 else:
                     del self.playerDict[player.coordinate.key]
                     player.coordinate.x += 1
@@ -203,9 +200,12 @@ class Environment(object):
                     self.map[player.coordinate.x-1][player.coordinate.y] = 'r'
                 
             elif direction == "right":
+                print "komut sag"
                 if player.coordinate.y + 1 == 40:
+                    print "kapali"
                     return
                 elif self.map[player.coordinate.x][player.coordinate.y+1] == 'G' or self.map[player.coordinate.x][player.coordinate.y+1] == 'X':
+                    print "duvar"
                     return
                 elif self.map[player.coordinate.x][player.coordinate.y+1] == 'P':
                     if player.canEatPlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)]):
@@ -226,20 +226,13 @@ class Environment(object):
                         self.map[player.coordinate.x][player.coordinate.y] = 'r'
                         self.deletePlayer(player)
                 elif self.map[player.coordinate.x][player.coordinate.y+1] == 'A' or  self.map[player.coordinate.x][player.coordinate.y+1] == 'B' or  self.map[player.coordinate.x][player.coordinate.y+1] == 'T':
-                    print "saga geldim"
-                    
                     player.coordinate.y += 1
                     player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
                     self.playerDict[player.coordinate.key] = player
                     del self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)]
                     self.map[player.coordinate.x][player.coordinate.y] = 'G'
-                    if str(player.coordinate.x)+'.'+str(player.coordinate.y-1) in self.forageDict:
-                        self.map[player.coordinate.x][player.coordinate.y-1] = self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].kind[0]
-                    else:
-                        self.map[player.coordinate.x][player.coordinate.y-1]='r'
-                    print player.coordinate.x, player.coordinate.y    
-                        
-                        
+                    self.map[player.coordinate.x][player.coordinate.y-1] = 'r'
+                    del self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)]
                 else:
                     del self.playerDict[player.coordinate.key]
                     player.coordinate.y += 1
@@ -273,16 +266,13 @@ class Environment(object):
                         self.map[player.coordinate.x][player.coordinate.y] = 'r'
                         self.deletePlayer(player)
                 elif self.map[player.coordinate.x-1][player.coordinate.y] == 'A' or  self.map[player.coordinate.x-1][player.coordinate.y] == 'B' or  self.map[player.coordinate.x-1][player.coordinate.y] == 'T':
-
-                    del self.playerDict[player.coordinate.key]
                     player.coordinate.x -= 1
                     player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
                     self.playerDict[player.coordinate.key] = player
+                    del self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)]
                     self.map[player.coordinate.x][player.coordinate.y] = 'G'
-                    if str(player.coordinate.x+1)+'.'+str(player.coordinate.y) in self.forageDict:
-                        self.map[player.coordinate.x+1][player.coordinate.y] = self.forageDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].kind[0]
-                    else:
-                        self.map[player.coordinate.x+1][player.coordinate.y]='r'
+                    self.map[player.coordinate.x+1][player.coordinate.y] = 'r'
+                    del self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)]
 
 
                 else:
@@ -320,16 +310,13 @@ class Environment(object):
                         self.map[player.coordinate.x][player.coordinate.y] = 'r'
                         self.deletePlayer(player)
                 elif self.map[player.coordinate.x][player.coordinate.y-1] == 'A' or  self.map[player.coordinate.x][player.coordinate.y-1] == 'B' or  self.map[player.coordinate.x][player.coordinate.y-1] == 'T':
-                    
-                    del self.playerDict[player.coordinate.key]
-                    player.coordinate.y -= 1
+                    player.coordinate.y -=1
                     player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
                     self.playerDict[player.coordinate.key] = player
+                    del self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)]
                     self.map[player.coordinate.x][player.coordinate.y] = 'G'
-                    if str(player.coordinate.x)+'.'+str(player.coordinate.y+1) in self.forageDict:
-                        self.map[player.coordinate.x][player.coordinate.y+1] = self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].kind[0]
-                    else:
-                        self.map[player.coordinate.x][player.coordinate.y+1]='r'
+                    self.map[player.coordinate.x][player.coordinate.y+1] = 'r'
+                    del self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)]
 
                 else:
                     del self.playerDict[player.coordinate.key]

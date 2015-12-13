@@ -61,7 +61,10 @@ class Agent(Thread):
          i = random.randrange(0,4)
          i *= 10
          j = random.randrange(0,40)
+         if i<2 or i>37 or j<2 or j > 37:
+            continue
          if(kind == "Ghost"):
+         
             if(self.env.map[i][j] == "r" and self.env.map[i][j+1] != "P" and self.env.map[i][j+2] != "P" and self.env.map[i][j-1] != "P" and self.env.map[i][j-2] != "P" and self.env.map[i-1][j] != "P" and self.env.map[i-2][j] != "P" and self.env.map[i+1][j] != "P" and self.env.map[i+2][j] != "P" and self.env.map[i+1][j+1] != "P" and self.env.map[i-1][j+1] != "P" and self.env.map[i-1][j-1] != "P" and self.env.map[i+1][j-1] != "P"):
                self.c=Coordinate(i,j)
          else:
