@@ -55,7 +55,7 @@ class Agent(Thread):
       self.connection = connection
       self.address = address
       self.server = server
-         
+      self.cont = False
    def randomCoordinate(self,kind):
        while(1):
          i = random.randrange(0,4)
@@ -63,11 +63,11 @@ class Agent(Thread):
          j = random.randrange(0,40)
          if(kind == "Ghost"):
             if(self.env.map[i][j] == "r" and self.env.map[i][j+1] != "P" and self.env.map[i][j+2] != "P" and self.env.map[i][j-1] != "P" and self.env.map[i][j-2] != "P" and self.env.map[i-1][j] != "P" and self.env.map[i-2][j] != "P" and self.env.map[i+1][j] != "P" and self.env.map[i+2][j] != "P" and self.env.map[i+1][j+1] != "P" and self.env.map[i-1][j+1] != "P" and self.env.map[i-1][j-1] != "P" and self.env.map[i+1][j-1] != "P"):
-               c=Coordinate(i,j)
+               self.c=Coordinate(i,j)
          else:
             if(self.env.map[i][j] == "r" and self.env.map[i][j+1] != "G" and self.env.map[i][j+2] != "P" and self.env.map[i][j-1] != "G" and self.env.map[i][j-2] != "P" and self.env.map[i-1][j] != "G" and self.env.map[i-2][j] != "G" and self.env.map[i+1][j] != "G" and self.env.map[i+2][j] != "G" and self.env.map[i+1][j+1] != "P" and self.env.map[i-1][j+1] != "G" and self.env.map[i-1][j-1] != "G" and self.env.map[i+1][j-1] != "G"):
-               c=Coordinate(i,j)
-         return c       
+               self.c=Coordinate(i,j)
+         return self.c       
 
 
    def run(self):
@@ -115,6 +115,10 @@ class Agent(Thread):
          
          
          elif self.command[0]=="left" or self.command[0]=="right" or self.command[0]=="up" or self.command[0]=="down":
+            
+            
+            
+            
             print "before move"
             print self.p.type, self.p.coordinate.x, self.p.coordinate.y
             print
