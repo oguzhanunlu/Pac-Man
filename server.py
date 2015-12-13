@@ -76,7 +76,7 @@ class Agent(Thread):
    def run(self):
       while 1:
          self.inp = self.connection.recv(10000)
-         self.command = self.inp.split(' ')
+         self.command = self.inp.split()
          
          if self.command[0] =="quit":
             with open("pickle/"+self.p.name,'wb') as f:
@@ -104,8 +104,13 @@ class Agent(Thread):
                print "ayni isim"
                continue
             else:
-               self.c = self.randomCoordinate(self.command[2])
+               while 1:
+                  self.c = self.randomCoordinate(self.command[2])
+                  if self.env.map[self.c.x][self.c.y]=='r':
+                     break               
+               
                print self.c.x,self.c.y
+               
                self.p = PlayerFactory().new(self.username,self.kind,0,1,self.c)
                print "buarafa"
                self.env.addPlayer(self.p)
