@@ -46,13 +46,6 @@ class Pacman(Player):
         self.name=name
         self.type="Pacman"
         self.point = point
-        
-        
-        
-        
-        
-        
-       
         self.level = level
         self.coordinate = coordinate       
         self.frame=[["Q" for i in xrange(11)] for i in xrange(11)]
@@ -61,7 +54,7 @@ class Pacman(Player):
         if self.point<5:
             self.level = 1
         elif self.point>5 and self.point<35:
-			self.level = 2			
+            self.level = 2			
         else:
             self.level = 3
 #    def levelDown(self):	gerek kalmayabilir

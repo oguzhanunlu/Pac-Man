@@ -122,10 +122,7 @@ class Agent(Thread):
                self.connection.send(self.out)
          
          
-         elif self.command[0]=="left" or self.command[0]=="right" or self.command[0]=="up" or self.command[0]=="down":
-            
-            
-            
+         elif self.command[0]=="l" or self.command[0]=="r" or self.command[0]=="u" or self.command[0]=="d":
             
             print "before move"
             print self.p.type, self.p.coordinate.x, self.p.coordinate.y

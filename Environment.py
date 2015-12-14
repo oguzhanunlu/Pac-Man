@@ -327,7 +327,7 @@ class Environment(object):
                     self.map[player.coordinate.x][player.coordinate.y+1] = 'r'
                     
         elif player.type == "Pacman":
-            if direction == "down":
+            if direction == "d":
                 if player.coordinate.x + 1 == 40:
                     return
                 elif self.map[player.coordinate.x+1][player.coordinate.y] == 'P': 
@@ -377,7 +377,7 @@ class Environment(object):
                         return
                 elif self.map[player.coordinate.x+1][player.coordinate.y] == 'B':
                     if player.canEatForage(self.forageDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)]):
-                        player.point += self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point 
+                        player.point += self.forageDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point 
                         self.deleteForage(self.forageDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)])
                         del self.playerDict[player.coordinate.key]
                         player.coordinate.x += 1
@@ -389,7 +389,7 @@ class Environment(object):
                         return
                 elif self.map[player.coordinate.x+1][player.coordinate.y] == 'T':
                     if player.canEatForage(self.forageDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)]):
-                        player.point += self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point 
+                        player.point += self.forageDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point 
                         self.deleteForage(self.forageDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)])
                         del self.playerDict[player.coordinate.key]
                         player.coordinate.x += 1
@@ -407,7 +407,7 @@ class Environment(object):
                     self.map[player.coordinate.x][player.coordinate.y] = 'P'
                     self.map[player.coordinate.x-1][player.coordinate.y] = 'r'
                 
-            elif direction == "right":
+            elif direction == "r":
                 if player.coordinate.y + 1 == 40:
                     return
                 elif self.map[player.coordinate.x][player.coordinate.y+1] == 'P': 
@@ -456,7 +456,7 @@ class Environment(object):
                         return
                 elif self.map[player.coordinate.x][player.coordinate.y+1] == 'B':
                     if player.canEatForage(self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)]):
-                        player.point += self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point 
+                        player.point += self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point 
                         self.deleteForage(self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)])
                         del self.playerDict[player.coordinate.key]
                         player.coordinate.y += 1
@@ -468,7 +468,7 @@ class Environment(object):
                         return
                 elif self.map[player.coordinate.x][player.coordinate.y+1] == 'T':
                     if player.canEatForage(self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)]):
-                        player.point += self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point 
+                        player.point += self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point 
                         self.deleteForage(self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)])
                         del self.playerDict[player.coordinate.key]
                         player.coordinate.y += 1
@@ -491,7 +491,7 @@ class Environment(object):
            
            
            
-            elif direction == "up":
+            elif direction == "u":
                 if player.coordinate.x - 1 == -1:
                     return
                 elif self.map[player.coordinate.x-1][player.coordinate.y] == 'P': 
@@ -542,7 +542,7 @@ class Environment(object):
                         return
                 elif self.map[player.coordinate.x-1][player.coordinate.y] == 'B':
                     if player.canEatForage(self.forageDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)]):
-                        player.point += self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point 
+                        player.point += self.forageDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point 
                         self.deleteForage(self.forageDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)])
                         del self.playerDict[player.coordinate.key]
                         player.coordinate.x -= 1
@@ -554,7 +554,7 @@ class Environment(object):
                         return
                 elif self.map[player.coordinate.x-1][player.coordinate.y] == 'T':
                     if player.canEatForage(self.forageDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)]):
-                        player.point += self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point 
+                        player.point += self.forageDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point 
                         self.deleteForage(self.forageDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)])
                         del self.playerDict[player.coordinate.key]
                         player.coordinate.x -= 1                        
@@ -625,7 +625,7 @@ class Environment(object):
                         return
                 elif self.map[player.coordinate.x][player.coordinate.y-1] == 'B':
                     if player.canEatForage(self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)]):
-                        player.point += self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point 
+                        player.point += self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point 
                         self.deleteForage(self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)])
                         del self.playerDict[player.coordinate.key]
                         player.coordinate.y -= 1
@@ -637,7 +637,7 @@ class Environment(object):
                         return
                 elif self.map[player.coordinate.x][player.coordinate.y-1] == 'T':
                     if player.canEatForage(self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)]):
-                        player.point += self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point 
+                        player.point += self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point 
                         self.deleteForage(self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)])
                         del self.playerDict[player.coordinate.key]
                         player.coordinate.y -= 1
