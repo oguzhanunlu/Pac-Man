@@ -1,7 +1,7 @@
 import socket
 import time
-import json
-HOST = '127.0.0.1'                 # Symbolic name meaning all available interfaces
+import cPickle as pickle
+HOST = '10.0.0.10'                 # Symbolic name meaning all available interfaces
 PORT = 50007              # Arbitrary non-privileged port
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
@@ -29,7 +29,7 @@ while(1):
       break
 
    else: # handling move and possibility of dead
-      data =  json.loads(data)
+      data =  pickle.loads(data)
       if "message" in data:
          print "geldim XD"
          print data["message"]

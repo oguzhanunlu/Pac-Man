@@ -2,30 +2,15 @@
 import random
 import operator
 import pickle
+from Coordinate import *
+from Player import *
+from Forage import *
+from Road import *
 from threading import *
 
 lock=Lock()
 locked = [[True for i in xrange(40)] for i in xrange(40)]
-def getlock(c1,c2):
-    lock.acquire()
-    while 1:
-        if locked[c1.x][c1.y]==True and locked[c2.x][c2.y]==True:
-            locked[c1.x][c1.y]==False
-            locked[c2.x][c2.y]==False
-            lock.release()
-            return
-        else:
-            lock.wait()
-         
-
-
-def freelock(c1,c2):
-    lock.acquire()
-    locked[c1.x][c1.y]==True
-    locked[c2.x][c2.y]==True
-    lock.notifyAll()
-    lock.release()
-
+cond = Condition(lock)
 
 
 
@@ -43,8 +28,33 @@ class Environment(object):
         self.map = [["X" for i in xrange(40)] for i in xrange(40)]
         self.usernames = []
         
+    def getlock(self,c1,c2):
+        global lock
+        global locked
+        global cond
+        lock.acquire()
+        while 1:
+            if locked[c1.x][c1.y]==True and locked[c2.x][c2.y]==True:
+                locked[c1.x][c1.y]==False
+                locked[c2.x][c2.y]==False
+                cond.release()
+                return
+            else:
+                cond.wait()
+             
+
+
+    def freelock(self,c1,c2):
+        global lock
+        global loced
+        global cond
+        lock.acquire()
+        locked[c1.x][c1.y]==True
+        locked[c2.x][c2.y]==True
+        cond.notifyAll()
+        lock.release()
     def save(self):
-        """Saves current game state to file.
+        """Saves self.current game state to file.
         @return: bool, True|False,whether it is saved successfully."""
         
         with open("player","wb") as f:
@@ -52,7 +62,7 @@ class Environment(object):
         with open("forage","wb") as f:
             pickle.dump(self.forageDict, f)
         with open("road","wb") as f:
-            pickle.dump(self.roadDict, f)
+              pickle.dump(self.roadDict, f)
         with open("map","wb") as f:
             pickle.dump(self.map, f)
         
@@ -190,9 +200,9 @@ class Environment(object):
                 
                 if player.coordinate.x + 1 < 40:
                 
-                    next = Coordinate(player.coordinate.x+1,player.coordinate.y)
-                    current = player.coordinate
-                    getlock(player.coordinate,next)
+                    self.next = Coordinate(player.coordinate.x+1,player.coordinate.y)
+                    self.current = player.coordinate
+                    self.getlock(player.coordinate,self.next)
                    
                     if self.map[player.coordinate.x+1][player.coordinate.y] == 'G' or self.map[player.coordinate.x+1][player.coordinate.y] == 'X':
                         return
@@ -229,14 +239,14 @@ class Environment(object):
                         self.playerDict[player.coordinate.key] = player
                         self.map[player.coordinate.x][player.coordinate.y] = 'G'
                         self.map[player.coordinate.x-1][player.coordinate.y] = 'r'
-                    freelock(current,next)    
+                    self.freelock(self.current,self.next)    
                 else:
                     return
             elif direction == "r":
                 if player.coordinate.y + 1 < 40:
-                    next = Coordinate(player.coordinate.x,player.coordinate.y+1)
-                    current = player.coordinate
-                    getlock(player.coordinate,next)
+                    self.next = Coordinate(player.coordinate.x,player.coordinate.y+1)
+                    self.current = player.coordinate
+                    self.getlock(player.coordinate,self.next)
 
                     if self.map[player.coordinate.x][player.coordinate.y+1] == 'G' or self.map[player.coordinate.x][player.coordinate.y+1] == 'X':
                         return
@@ -273,14 +283,14 @@ class Environment(object):
                         self.playerDict[player.coordinate.key] = player
                         self.map[player.coordinate.x][player.coordinate.y] = 'G'
                         self.map[player.coordinate.x][player.coordinate.y-1] = 'r'
-                    freelock(current,next)
+                    self.freelock(self.current,self.next)
                 else:
                     return
             elif direction == "u":
                 if player.coordinate.x - 1 >= 0:
-                    next = Coordinate(player.coordinate.x-1,player.coordinate.y)
-                    current = player.coordinate
-                    getlock(player.coordinate,next)
+                    self.next = Coordinate(player.coordinate.x-1,player.coordinate.y)
+                    self.current = player.coordinate
+                    self.getlock(player.coordinate,self.next)
        
                     if self.map[player.coordinate.x-1][player.coordinate.y] == 'G' or self.map[player.coordinate.x-1][player.coordinate.y] == 'X':
                         return
@@ -320,15 +330,15 @@ class Environment(object):
                         self.playerDict[player.coordinate.key] = player
                         self.map[player.coordinate.x][player.coordinate.y] = 'G'
                         self.map[player.coordinate.x+1][player.coordinate.y] = 'r'
-                    freelock(current,next)
+                    self.freelock(self.current,self.next)
                 else:
                     return
             else:
                 if player.coordinate.y - 1 > -1:
 
-                    next = Coordinate(player.coordinate.x,player.coordinate.y-1)
-                    current = player.coordinate
-                    getlock(player.coordinate,next)
+                    self.next = Coordinate(player.coordinate.x,player.coordinate.y-1)
+                    self.current = player.coordinate
+                    self.getlock(player.coordinate,self.next)
        
                     if self.map[player.coordinate.x][player.coordinate.y-1] == 'G' or self.map[player.coordinate.x][player.coordinate.y-1] == 'X':
                         return
@@ -369,15 +379,15 @@ class Environment(object):
                         self.playerDict[player.coordinate.key] = player
                         self.map[player.coordinate.x][player.coordinate.y] = 'G'
                         self.map[player.coordinate.x][player.coordinate.y+1] = 'r'
-                    freelock(current,next)    
+                    self.freelock(self.current,self.next)    
                 else:
                     return
         elif player.type == "Pacman":
             if direction == "d":
                 if player.coordinate.x + 1 < 40:
-                    next = Coordinate(player.coordinate.x+1,player.coordinate.y)
-                    current = player.coordinate
-                    getlock(player.coordinate,next)
+                    self.next = Coordinate(player.coordinate.x+1,player.coordinate.y)
+                    self.current = player.coordinate
+                    self.getlock(player.coordinate,self.next)
                         
                     if self.map[player.coordinate.x+1][player.coordinate.y] == 'P': 
                         return
@@ -432,14 +442,14 @@ class Environment(object):
                         self.playerDict[player.coordinate.key] = player
                         self.map[player.coordinate.x][player.coordinate.y] = 'P'
                         self.map[player.coordinate.x-1][player.coordinate.y] = 'r'
-                    freelock(current,next)
+                    self.freelock(self.current,self.next)
                 else:
                     return                   
             elif direction == "r":
                 if player.coordinate.y + 1 < 40:
-                    next = Coordinate(player.coordinate.x,player.coordinate.y+1)
-                    current = player.coordinate
-                    getlock(player.coordinate,next)
+                    self.next = Coordinate(player.coordinate.x,player.coordinate.y+1)
+                    self.current = player.coordinate
+                    self.getlock(player.coordinate,self.next)
 
                     if self.map[player.coordinate.x][player.coordinate.y+1] == 'P': 
                         return
@@ -493,14 +503,14 @@ class Environment(object):
                         self.playerDict[player.coordinate.key] = player
                         self.map[player.coordinate.x][player.coordinate.y] = 'P'
                         self.map[player.coordinate.x][player.coordinate.y-1] = 'r'
-                    freelock(current,next)         
+                    self.freelock(self.current,self.next)         
                 else:
                     return
             elif direction == "u":
                 if player.coordinate.x - 1 > -1:
-                    next = Coordinate(player.coordinate.x-1,player.coordinate.y)
-                    current = player.coordinate
-                    getlock(player.coordinate,next)
+                    self.next = Coordinate(player.coordinate.x-1,player.coordinate.y)
+                    self.current = player.coordinate
+                    self.getlock(player.coordinate,self.next)
 
                     if self.map[player.coordinate.x-1][player.coordinate.y] == 'P': 
                         return
@@ -556,14 +566,14 @@ class Environment(object):
                         self.playerDict[player.coordinate.key] = player
                         self.map[player.coordinate.x][player.coordinate.y] = 'P'
                         self.map[player.coordinate.x+1][player.coordinate.y] = 'r'
-                    freelock(current,next)    
+                    self.freelock(self.current,self.next)    
                 else:
                     return           
             else:
                 if player.coordinate.y - 1 > -1:
-                    next = Coordinate(player.coordinate.x,player.coordinate.y-1)
-                    current = player.coordinate
-                    getlock(player.coordinate,next)
+                    self.next = Coordinate(player.coordinate.x,player.coordinate.y-1)
+                    self.current = player.coordinate
+                    self.getlock(player.coordinate,self.next)
        
                     if self.map[player.coordinate.x][player.coordinate.y-1] == 'P': 
                         return
@@ -618,7 +628,7 @@ class Environment(object):
                         self.playerDict[player.coordinate.key] = player
                         self.map[player.coordinate.x][player.coordinate.y] = 'P'
                         self.map[player.coordinate.x][player.coordinate.y+1] = 'r'
-                        freelock(current,next)
+                        self.freelock(self.current,self.next)
                 else:
                    return  
             player.levelChanger()

@@ -7,7 +7,7 @@ from Forage import *
 from threading import *
 import socket
 import time
-import json
+import cPickle as pickle
 
 
 class Agent(Thread):
@@ -76,6 +76,8 @@ class Agent(Thread):
    def run(self):
       while 1:
          self.inp = self.connection.recv(10000)
+         if not self.inp:
+            continue
          self.command = self.inp.split()
          
          if self.command[0] =="quit":
@@ -92,14 +94,13 @@ class Agent(Thread):
             self.env.sendPlayerRandom(self.p)
             self.a={"map":self.env.getMap(self.p,5,5),"scoreboard":self.env.getScoreBoard()}
             print self.a["map"]
-            self.out = json.dumps(self.a,indent = 4)
+            self.out = pickle.dumps(self.a,indent = 4)
             self.connection.send(self.out)            
          
          elif (self.command[0] =="signup" ):
             self.username = self.command[1]
             self.kind = self.command[2]
             if self.username in self.env.usernames:
-            
                self.connection.send("This username already exists.")
                print "ayni isim"
                continue
@@ -118,31 +119,37 @@ class Agent(Thread):
                print "geldi"
                self.a={"map":self.env.getMap(self.p,5,5),"scoreboard":self.env.getScoreBoard()}
                print self.a["map"]
-               self.out = json.dumps(self.a,indent = 4)
-               self.connection.send(self.out)
-         
+               try:                
+                  self.out = pickle.dumps(self.a)
+                  self.connection.send(self.out)
+                  print "data gitti"
+               except:
+                  print "olmadi......"
          
          elif self.command[0]=="l" or self.command[0]=="r" or self.command[0]=="u" or self.command[0]=="d":
-            
+            self.dead = False
             print "before move"
             print self.p.type, self.p.coordinate.x, self.p.coordinate.y
             print
             self.p.frame=[["Q" for i in xrange(11)] for i in xrange(11)]
-            if self.env.playerDict[str(self.p.coordinate.x)+'.'+str(self.p.coordinate.y)].type != self.p.type:
+            try:
+               if self.env.playerDict[str(self.p.coordinate.x)+'.'+str(self.p.coordinate.y)].type != self.p.type:
+                  self.dead = True
+            except:      
                self.connection.send("Olmussun yahu")
                self.env.usernames.remove(self.p.name)
                self.a={"message":"Ogren de gel :) AHAHAHA","map":self.env.getMap(self.p,5,5),"scoreboard":self.env.getScoreBoard()}
                print self.a["map"]
                
-            else:   
+            if not self.dead :   
                
                self.env.move(self.p,self.command[0])
                print "after move"
-               print self.p.type, self.p.coordinate.x, self.p.coordinate.y
+               print self.p.name,self.p.type, self.p.coordinate.x, self.p.coordinate.y
                print "bizim canimiz yanmaz gardas"
                self.a={"map":self.env.getMap(self.p,5,5),"scoreboard":self.env.getScoreBoard()}
                print self.a["map"]
-               self.out = json.dumps(self.a,indent = 4)
+               self.out = pickle.dumps(self.a)
                self.connection.send(self.out)
                
             print "nevrim dondu"
@@ -151,7 +158,7 @@ class Agent(Thread):
          else:
                   
           #  self.a={"map":self.env.map,"scoreboard":self.env.getScoreBoard()}
-           # self.out = json.dumps(self.a)
+           # self.out = pickle.dumps(self.a)
            # if not self.out: break
             try:
                self.connection.send("Invalid command...")
@@ -184,47 +191,10 @@ class Server:
          agent = Agent(conn,addr,self)
          self.agents.append(agent)        
          agent.start()
+         
 
 
 if __name__ =='__main__':
    server = Server()
    server.start_server() 
-      
 
-"""
-HOST = ''                 # Symbolic name meaning all available interfaces
-PORT = 50007              # Arbitrary non-privileged port
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((HOST, PORT))
-s.listen(1)
-conn, addr = s.accept()
-#print 'Connected by', addr
-while 1:
-   inp = conn.recv(10000)
-   command = inp.split(' ')
-   if command[0] =="Quit":
-      #save game
-      conn.send("Successfully closed.")
-      break
-   elif (command[0] =="SignUp" ):
-      username = command[1]
-      kind = command[2]
-      if username in env.usernames:
-         conn.send("This username already exists.")
-      else:
-         c = randomCoordinate(kind)
-         print c.x,c.y
-         p = PlayerFactory().new(username,kind,0,1,c)
-         env.addPlayer(p)
-         #conn.send("Player with name "+p.name+" is created with type "+p.type+" successfully.")
-         a={"map":env.getMap(p,5,5),"scoreboard":env.getScoreBoard()}
-         out = json.dumps(a,indent = 4)
-         conn.send(out)
-   else:      
-      a={"map":env.map,"scoreboard":env.getScoreBoard()}
-      out = json.dumps(a)
-      if not out: break
-      conn.send(out)
-
-conn.close()
-"""
