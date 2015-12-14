@@ -2,11 +2,37 @@
 import random
 import operator
 import pickle
+from threading import *
+
+lock=Lock()
+locked = [[True for i in xrange(40)] for i in xrange(40)]
+def getlock(c1,c2):
+    lock.acquire()
+    while 1:
+        if locked[c1.x][c1.y]==True and locked[c2.x][c2.y]==True:
+            locked[c1.x][c1.y]==False
+            locked[c2.x][c2.y]==False
+            lock.release()
+            return
+        else:
+            lock.wait()
+         
+
+
+def freelock(c1,c2):
+    lock.acquire()
+    locked[c1.x][c1.y]==True
+    locked[c2.x][c2.y]==True
+    lock.notifyAll()
+    lock.release()
+
+
+
 
 class Environment(object):
     """Creates, saves, loads map"""
-	
-		
+    
+        
     def __init__(self):
         """Creates initial map with ways and forages.
         @return: Environment instance"""
@@ -16,84 +42,84 @@ class Environment(object):
         #self.map = [['X','X','X','X'],['X','X','X','X'],['X','X','X','X'],['X','X','X','X']]
         self.map = [["X" for i in xrange(40)] for i in xrange(40)]
         self.usernames = []
-		
+        
     def save(self):
-	    """Saves current game state to file.
-	    @return: bool, True|False,whether it is saved successfully."""
-	    
-	    with open("player","wb") as f:
-	        pickle.dump(self.playerDict, f)
-	    with open("forage","wb") as f:
-	        pickle.dump(self.forageDict, f)
-	    with open("road","wb") as f:
-	        pickle.dump(self.roadDict, f)
-	    with open("map","wb") as f:
-	        pickle.dump(self.map, f)
-	    
+        """Saves current game state to file.
+        @return: bool, True|False,whether it is saved successfully."""
+        
+        with open("player","wb") as f:
+            pickle.dump(self.playerDict, f)
+        with open("forage","wb") as f:
+            pickle.dump(self.forageDict, f)
+        with open("road","wb") as f:
+            pickle.dump(self.roadDict, f)
+        with open("map","wb") as f:
+            pickle.dump(self.map, f)
+        
 
     def load(self):
-	    """Loads last saved game
-	    @return: bool, True|False, whether it is loaded succesfully."""
+        """Loads last saved game
+        @return: bool, True|False, whether it is loaded succesfully."""
 
-	    with open("player","rb") as f:
-	        self.playerDict = pickle.load(f)
-	    with open("forage","rb") as f:
-	        self.forageDict = pickle.load(f)
-	    with open("road","rb") as f:
-	        self.roadDict = pickle.load(f)
-	    with open("map","rb") as f:
-	        self.map = pickle.load(f)
+        with open("player","rb") as f:
+            self.playerDict = pickle.load(f)
+        with open("forage","rb") as f:
+            self.forageDict = pickle.load(f)
+        with open("road","rb") as f:
+            self.roadDict = pickle.load(f)
+        with open("map","rb") as f:
+            self.map = pickle.load(f)
 
-	
+    
     def addRoad(self, road):
-	    """Adds roads to given coordinate.
-	    @param road: Road
-	    @return: bool, True|False, whether road is added succesfully."""
-	    
-	    self.roadDict[road.coordinate.key]=road
-	    self.map[road.coordinate.x][road.coordinate.y] = 'r'#this is only needed for phase 1 testing
+        """Adds roads to given coordinate.
+        @param road: Road
+        @return: bool, True|False, whether road is added succesfully."""
+        
+        self.roadDict[road.coordinate.key]=road
+        self.map[road.coordinate.x][road.coordinate.y] = 'r'#this is only needed for phase 1 testing
     
     def addForage(self, forage):
         """Adds forage to  given coordinate.
         @param forage: Apple | Tomato | Banana
         @return: bool, True|False, whether forage is added succesfully."""
         if  self.map[forage.coordinate.x][forage.coordinate.y]=='r':
-        	self.forageDict[forage.coordinate.key]=forage
-        	self.map[forage.coordinate.x][forage.coordinate.y]=forage.kind[0]    	
-	        
+            self.forageDict[forage.coordinate.key]=forage
+            self.map[forage.coordinate.x][forage.coordinate.y]=forage.kind[0]       
+            
     def deleteForage(self, forage):
-	    """Deletes forage from  given coordinate.
-	    @param coordinate: Coordinate
-	    @return: bool, True|False, whether forage is deleted succesfully."""		
-	    del self.forageDict[forage.coordinate.key]
-	    self.map[forage.coordinate.x][forage.coordinate.y]='r'
-	    
+        """Deletes forage from  given coordinate.
+        @param coordinate: Coordinate
+        @return: bool, True|False, whether forage is deleted succesfully."""        
+        del self.forageDict[forage.coordinate.key]
+        self.map[forage.coordinate.x][forage.coordinate.y]='r'
+        
     def addPlayer(self, player):
-	    """Adds player to  given coordinate.
-	    @param player: Player
-	    @return: bool, True|False, whether player is added succesfully."""
-	    if  self.map[player.coordinate.x][player.coordinate.y]=='r':
-	    	self.playerDict[player.coordinate.key]=player
-	    	self.map[player.coordinate.x][player.coordinate.y]=player.type[0]
-	    	self.usernames.append(player.name)
-	    
+        """Adds player to  given coordinate.
+        @param player: Player
+        @return: bool, True|False, whether player is added succesfully."""
+        if  self.map[player.coordinate.x][player.coordinate.y]=='r':
+            self.playerDict[player.coordinate.key]=player
+            self.map[player.coordinate.x][player.coordinate.y]=player.type[0]
+            self.usernames.append(player.name)
+        
     def deletePlayer(self, player):
-	    """Deletes player from  given coordinate.
-	    @param player: Player
-	    @return: bool, True|False, whether player is deleted succesfully."""
-	    del self.playerDict[player.coordinate.key]
-	    self.map[player.coordinate.x][player.coordinate.y]='r'
-	    del player
-	
+        """Deletes player from  given coordinate.
+        @param player: Player
+        @return: bool, True|False, whether player is deleted succesfully."""
+        del self.playerDict[player.coordinate.key]
+        self.map[player.coordinate.x][player.coordinate.y]='r'
+        del player
+    
     def mapGenerator(self):
         for i in range(0,40,10):
             self.map[i] = ['r']*40
             #print self.map[i]
         for i in range(0,40,10):
             for j in range(0,40):
-                self.map[j][i] = 'r'	    	        
-	    self.map[39] = ['r']*40
-	    for j in range(0,40):
+                self.map[j][i] = 'r'                    
+                self.map[39] = ['r']*40
+            for j in range(0,40):
                 self.map[j][39] = 'r'
     def sendPlayerRandom(self, player):
         i = random.randrange(0,4)
@@ -106,7 +132,7 @@ class Environment(object):
                 self.playerDict[player.coordinate.key]=player
                 self.map[i][j] = player.type[0]
                 break
-	    
+        
     def getScoreBoard(self):
         """Returns sorted player list.
         @return: dict, list of players with their point"""
@@ -161,408 +187,438 @@ class Environment(object):
     def move(self, player, direction):
         if player.type == "Ghost":
             if direction == "d":
-                if player.coordinate.x + 1 == 40:
-                    return
-                elif self.map[player.coordinate.x+1][player.coordinate.y] == 'G' or self.map[player.coordinate.x+1][player.coordinate.y] == 'X':
-                    return
-                elif self.map[player.coordinate.x+1][player.coordinate.y] == 'P':
-                    if player.canEatPlayer(self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)]):
-                        player.point += self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point 
-                        self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point /= 2
-                        if self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point < 5:
-                            self.deletePlayer(self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)])
+                
+                if player.coordinate.x + 1 < 40:
+                
+                    next = Coordinate(player.coordinate.x+1,player.coordinate.y)
+                    current = player.coordinate
+                    getlock(player.coordinate,next)
+                   
+                    if self.map[player.coordinate.x+1][player.coordinate.y] == 'G' or self.map[player.coordinate.x+1][player.coordinate.y] == 'X':
+                        return
+                    elif self.map[player.coordinate.x+1][player.coordinate.y] == 'P':
+                        if player.canEatPlayer(self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)]):
+                            player.point += self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point 
+                            self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point /= 2
+                            if self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point < 5:
+                                self.deletePlayer(self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)])
+                            else:
+                                self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].levelChanger()
+                                self.sendPlayerRandom(self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)])
+                            player.coordinate.x += 1
+                            player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
+                            self.playerDict[player.coordinate.key] = player
+                            self.map[player.coordinate.x][player.coordinate.y] = 'G'
+                            self.map[player.coordinate.x-1][player.coordinate.y] = 'r'
                         else:
-                            self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].levelChanger()
-                            self.sendPlayerRandom(self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)])
+                            self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point+=player.point
+                            self.map[player.coordinate.x][player.coordinate.y] = 'r'
+                            self.deletePlayer(player)
+                    elif self.map[player.coordinate.x+1][player.coordinate.y] == 'A' or  self.map[player.coordinate.x+1][player.coordinate.y] == 'B' or  self.map[player.coordinate.x+1][player.coordinate.y] == 'T':
+                        player.coordinate.x += 1
+                        player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
+                        self.playerDict[player.coordinate.key] = player
+                        del self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)]
+                        self.map[player.coordinate.x][player.coordinate.y] = 'G'
+                        self.map[player.coordinate.x-1][player.coordinate.y] = 'r'
+                        del self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)]
+                    else:
+                        del self.playerDict[player.coordinate.key]
                         player.coordinate.x += 1
                         player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
                         self.playerDict[player.coordinate.key] = player
                         self.map[player.coordinate.x][player.coordinate.y] = 'G'
                         self.map[player.coordinate.x-1][player.coordinate.y] = 'r'
-                    else:
-                        self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point+=player.point
-                        self.map[player.coordinate.x][player.coordinate.y] = 'r'
-                        self.deletePlayer(player)
-                elif self.map[player.coordinate.x+1][player.coordinate.y] == 'A' or  self.map[player.coordinate.x+1][player.coordinate.y] == 'B' or  self.map[player.coordinate.x+1][player.coordinate.y] == 'T':
-                    player.coordinate.x += 1
-                    player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
-                    self.playerDict[player.coordinate.key] = player
-                    del self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)]
-                    self.map[player.coordinate.x][player.coordinate.y] = 'G'
-                    self.map[player.coordinate.x-1][player.coordinate.y] = 'r'
-                    del self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)]
+                    freelock(current,next)    
                 else:
-                    print "ghost up"
-                    del self.playerDict[player.coordinate.key]
-                    player.coordinate.x += 1
-                    player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
-                    self.playerDict[player.coordinate.key] = player
-                    self.map[player.coordinate.x][player.coordinate.y] = 'G'
-                    self.map[player.coordinate.x-1][player.coordinate.y] = 'r'
-                
+                    return
             elif direction == "r":
-                print "komut sag"
-                if player.coordinate.y + 1 == 40:
-                    print "kapali"
-                    return
-                elif self.map[player.coordinate.x][player.coordinate.y+1] == 'G' or self.map[player.coordinate.x][player.coordinate.y+1] == 'X':
-                    print "duvar"
-                    return
-                elif self.map[player.coordinate.x][player.coordinate.y+1] == 'P':
-                    if player.canEatPlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)]):
-                        player.point += self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point
-                        self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point /= 2
-                        if self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point < 5:
-                            self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)])
+                if player.coordinate.y + 1 < 40:
+                    next = Coordinate(player.coordinate.x,player.coordinate.y+1)
+                    current = player.coordinate
+                    getlock(player.coordinate,next)
+
+                    if self.map[player.coordinate.x][player.coordinate.y+1] == 'G' or self.map[player.coordinate.x][player.coordinate.y+1] == 'X':
+                        return
+                    elif self.map[player.coordinate.x][player.coordinate.y+1] == 'P':
+                        if player.canEatPlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)]):
+                            player.point += self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point
+                            self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point /= 2
+                            if self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point < 5:
+                                self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)])
+                            else:
+                                self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].levelChanger()
+                                self.sendPlayerRandom(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)])
+                            player.coordinate.y += 1 
+                            player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
+                            self.playerDict[player.coordinate.key] = player
+                            self.map[player.coordinate.x][player.coordinate.y] = 'G'
+                            self.map[player.coordinate.x][player.coordinate.y-1] = 'r'
                         else:
-                            self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].levelChanger()
-                            self.sendPlayerRandom(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)])
-                        player.coordinate.y += 1 
+                            self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point+=player.point
+                            self.map[player.coordinate.x][player.coordinate.y] = 'r'
+                            self.deletePlayer(player)
+                    elif self.map[player.coordinate.x][player.coordinate.y+1] == 'A' or  self.map[player.coordinate.x][player.coordinate.y+1] == 'B' or  self.map[player.coordinate.x][player.coordinate.y+1] == 'T':
+                        player.coordinate.y += 1
+                        player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
+                        self.playerDict[player.coordinate.key] = player
+                        del self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)]
+                        self.map[player.coordinate.x][player.coordinate.y] = 'G'
+                        self.map[player.coordinate.x][player.coordinate.y-1] = 'r'
+                        del self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)]
+                    else:
+                        del self.playerDict[player.coordinate.key]
+                        player.coordinate.y += 1
                         player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
                         self.playerDict[player.coordinate.key] = player
                         self.map[player.coordinate.x][player.coordinate.y] = 'G'
                         self.map[player.coordinate.x][player.coordinate.y-1] = 'r'
-                    else:
-                        self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point+=player.point
-                        self.map[player.coordinate.x][player.coordinate.y] = 'r'
-                        self.deletePlayer(player)
-                elif self.map[player.coordinate.x][player.coordinate.y+1] == 'A' or  self.map[player.coordinate.x][player.coordinate.y+1] == 'B' or  self.map[player.coordinate.x][player.coordinate.y+1] == 'T':
-                    player.coordinate.y += 1
-                    player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
-                    self.playerDict[player.coordinate.key] = player
-                    del self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)]
-                    self.map[player.coordinate.x][player.coordinate.y] = 'G'
-                    self.map[player.coordinate.x][player.coordinate.y-1] = 'r'
-                    del self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)]
+                    freelock(current,next)
                 else:
-                    del self.playerDict[player.coordinate.key]
-                    player.coordinate.y += 1
-                    player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
-                    self.playerDict[player.coordinate.key] = player
-                    self.map[player.coordinate.x][player.coordinate.y] = 'G'
-                    self.map[player.coordinate.x][player.coordinate.y-1] = 'r'
-                
+                    return
             elif direction == "u":
-                if player.coordinate.x - 1 < 0:
-                    return
-                elif self.map[player.coordinate.x-1][player.coordinate.y] == 'G' or self.map[player.coordinate.x-1][player.coordinate.y] == 'X':
-                    return
-                elif self.map[player.coordinate.x-1][player.coordinate.y] == 'P':
-                    
-                    if player.canEatPlayer(self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)]):
-                        player.point += self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point 
-                        self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point /= 2
-                        if self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point < 5:
-                            self.deletePlayer(self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)])
-                        else:
-                            self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].levelChanger()
-                            self.sendPlayerRandom(self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)])
+                if player.coordinate.x - 1 >= 0:
+                    next = Coordinate(player.coordinate.x-1,player.coordinate.y)
+                    current = player.coordinate
+                    getlock(player.coordinate,next)
+       
+                    if self.map[player.coordinate.x-1][player.coordinate.y] == 'G' or self.map[player.coordinate.x-1][player.coordinate.y] == 'X':
+                        return
+                    elif self.map[player.coordinate.x-1][player.coordinate.y] == 'P':
+                       
+                        if player.canEatPlayer(self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)]):
+                            player.point += self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point 
+                            self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point /= 2
+                            if self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point < 5:
+                                self.deletePlayer(self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)])
+                            else:
+                                self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].levelChanger()
+                                self.sendPlayerRandom(self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)])
+                            player.coordinate.x -= 1
+                            player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
+                            self.playerDict[player.coordinate.key] = player
+                            self.map[player.coordinate.x][player.coordinate.y] = 'G'
+                            self.map[player.coordinate.x+1][player.coordinate.y] = 'r'
+                        else :
+                            self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point+=player.point
+                            self.map[player.coordinate.x][player.coordinate.y] = 'r'
+                            self.deletePlayer(player)
+                    elif self.map[player.coordinate.x-1][player.coordinate.y] == 'A' or  self.map[player.coordinate.x-1][player.coordinate.y] == 'B' or  self.map[player.coordinate.x-1][player.coordinate.y] == 'T':
+                        player.coordinate.x -= 1
+                        player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
+                        self.playerDict[player.coordinate.key] = player
+                        del self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)]
+                        self.map[player.coordinate.x][player.coordinate.y] = 'G'
+                        self.map[player.coordinate.x+1][player.coordinate.y] = 'r'
+                        del self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)]
+
+
+                    else:
+                        del self.playerDict[player.coordinate.key]
                         player.coordinate.x -= 1
                         player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
                         self.playerDict[player.coordinate.key] = player
                         self.map[player.coordinate.x][player.coordinate.y] = 'G'
                         self.map[player.coordinate.x+1][player.coordinate.y] = 'r'
-                    else:
-                        self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point+=player.point
-                        self.map[player.coordinate.x][player.coordinate.y] = 'r'
-                        self.deletePlayer(player)
-                elif self.map[player.coordinate.x-1][player.coordinate.y] == 'A' or  self.map[player.coordinate.x-1][player.coordinate.y] == 'B' or  self.map[player.coordinate.x-1][player.coordinate.y] == 'T':
-                    player.coordinate.x -= 1
-                    player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
-                    self.playerDict[player.coordinate.key] = player
-                    del self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)]
-                    self.map[player.coordinate.x][player.coordinate.y] = 'G'
-                    self.map[player.coordinate.x+1][player.coordinate.y] = 'r'
-                    del self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)]
-
-
+                    freelock(current,next)
                 else:
-                    del self.playerDict[player.coordinate.key]
-                    player.coordinate.x -= 1
-                    player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
-                    self.playerDict[player.coordinate.key] = player
-                    self.map[player.coordinate.x][player.coordinate.y] = 'G'
-                    self.map[player.coordinate.x+1][player.coordinate.y] = 'r'
-                
+                    return
             else:
-                if player.coordinate.y - 1 == -1:
-                    return
-                elif self.map[player.coordinate.x][player.coordinate.y-1] == 'G' or self.map[player.coordinate.x][player.coordinate.y-1] == 'X':
-                    return
-                elif self.map[player.coordinate.x][player.coordinate.y-1] == 'P':
-                    if player.canEatPlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)]):
-                        
-                        player.point += self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point
-                        self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point /= 2
-                        if self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point < 5:
-                            
-                            self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)])
+                if player.coordinate.y - 1 > -1:
+
+                    next = Coordinate(player.coordinate.x,player.coordinate.y-1)
+                    current = player.coordinate
+                    getlock(player.coordinate,next)
+       
+                    if self.map[player.coordinate.x][player.coordinate.y-1] == 'G' or self.map[player.coordinate.x][player.coordinate.y-1] == 'X':
+                        return
+                    elif self.map[player.coordinate.x][player.coordinate.y-1] == 'P':
+                        if player.canEatPlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)]):
+                           
+                            player.point += self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point
+                            self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point /= 2
+                            if self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point < 5:
+                               
+                                self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)])
+                            else:
+                                self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].levelChanger()
+                                self.sendPlayerRandom(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)])
+                            player.coordinate.y -= 1
+                            player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
+                            self.playerDict[player.coordinate.key] = player
+                            del self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)]
+                            self.map[player.coordinate.x][player.coordinate.y] = 'G'
+                            self.map[player.coordinate.x][player.coordinate.y+1] = 'r'
                         else:
-                            self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].levelChanger()
-                            self.sendPlayerRandom(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)])
-                        player.coordinate.y -= 1
+                            self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point+=player.point
+                            self.map[player.coordinate.x][player.coordinate.y] = 'r'
+                            self.deletePlayer(player)
+                    elif self.map[player.coordinate.x][player.coordinate.y-1] == 'A' or  self.map[player.coordinate.x][player.coordinate.y-1] == 'B' or  self.map[player.coordinate.x][player.coordinate.y-1] == 'T':
+                        player.coordinate.y -=1
                         player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
                         self.playerDict[player.coordinate.key] = player
                         del self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)]
                         self.map[player.coordinate.x][player.coordinate.y] = 'G'
                         self.map[player.coordinate.x][player.coordinate.y+1] = 'r'
-                    else:
-                        self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point+=player.point
-                        self.map[player.coordinate.x][player.coordinate.y] = 'r'
-                        self.deletePlayer(player)
-                elif self.map[player.coordinate.x][player.coordinate.y-1] == 'A' or  self.map[player.coordinate.x][player.coordinate.y-1] == 'B' or  self.map[player.coordinate.x][player.coordinate.y-1] == 'T':
-                    player.coordinate.y -=1
-                    player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
-                    self.playerDict[player.coordinate.key] = player
-                    del self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)]
-                    self.map[player.coordinate.x][player.coordinate.y] = 'G'
-                    self.map[player.coordinate.x][player.coordinate.y+1] = 'r'
-                    del self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)]
+                        del self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)]
 
+                    else:
+                        del self.playerDict[player.coordinate.key]
+                        player.coordinate.y -= 1
+                        player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
+                        self.playerDict[player.coordinate.key] = player
+                        self.map[player.coordinate.x][player.coordinate.y] = 'G'
+                        self.map[player.coordinate.x][player.coordinate.y+1] = 'r'
+                    freelock(current,next)    
                 else:
-                    del self.playerDict[player.coordinate.key]
-                    player.coordinate.y -= 1
-                    player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
-                    self.playerDict[player.coordinate.key] = player
-                    self.map[player.coordinate.x][player.coordinate.y] = 'G'
-                    self.map[player.coordinate.x][player.coordinate.y+1] = 'r'
-                    
+                    return
         elif player.type == "Pacman":
             if direction == "d":
-                if player.coordinate.x + 1 == 40:
-                    return
-                elif self.map[player.coordinate.x+1][player.coordinate.y] == 'P': 
-                    return
-                elif self.map[player.coordinate.x+1][player.coordinate.y] == 'X':
-                    if player.level == 3:
-                        del self.playerDict[player.coordinate.key]
-                        player.coordinate.x += 1
-                        player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
-                        self.playerDict[player.coordinate.key] = player
-                        self.map[player.coordinate.x][player.coordinate.y] = "P"
-                        self.map[player.coordinate.x-1][player.coordinate.y] = "r" 
-                elif self.map[player.coordinate.x+1][player.coordinate.y] == 'G':
-                    if player.canEatGhost(self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)]):
-                        player.point += self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point 
-                        self.deletePlayer(self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)])
-                        player.coordinate.x += 1 
-                        player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
-                        self.playerDict[player.coordinate.key] = player
-                        self.map[player.coordinate.x][player.coordinate.y] = 'P'
-                        self.map[player.coordinate.x-1][player.coordinate.y] = 'r'
-                    else:
-                        self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point+=player.point
-                        player.point /= 2
-                        if player.point < 5:
-                            self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)])
-                            self.map[player.coordinate.x][player.coordinate.y]='r'
-                        else:
-                            self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)].levelChanger()
-                            self.map[player.coordinate.x][player.coordinate.y] = 'r'
-                            self.sendPlayerRandom(player)
-                        # ghost pacmani yedi, pacmani random bir yere tasi
+                if player.coordinate.x + 1 < 40:
+                    next = Coordinate(player.coordinate.x+1,player.coordinate.y)
+                    current = player.coordinate
+                    getlock(player.coordinate,next)
                         
-                elif self.map[player.coordinate.x+1][player.coordinate.y] == 'P':
-                    return
-                elif self.map[player.coordinate.x+1][player.coordinate.y] == 'A' or self.map[player.coordinate.x+1][player.coordinate.y] == 'B' or self.map[player.coordinate.x+1][player.coordinate.y] == 'T':
-                    if player.canEatForage(self.forageDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)]):
-                        player.point += self.forageDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point 
-                        self.deleteForage(self.forageDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)])
+                    if self.map[player.coordinate.x+1][player.coordinate.y] == 'P': 
+                        return
+                    elif self.map[player.coordinate.x+1][player.coordinate.y] == 'X':
+                        if player.level == 3:
+                            del self.playerDict[player.coordinate.key]
+                            player.coordinate.x += 1
+                            player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
+                            self.playerDict[player.coordinate.key] = player
+                            self.map[player.coordinate.x][player.coordinate.y] = "P"
+                            self.map[player.coordinate.x-1][player.coordinate.y] = "r" 
+                    elif self.map[player.coordinate.x+1][player.coordinate.y] == 'G':
+                        if player.canEatGhost(self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)]):
+                            player.point += self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point 
+                            self.deletePlayer(self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)])
+                            player.coordinate.x += 1 
+                            player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
+                            self.playerDict[player.coordinate.key] = player
+                            self.map[player.coordinate.x][player.coordinate.y] = 'P'
+                            self.map[player.coordinate.x-1][player.coordinate.y] = 'r'
+                        else:
+                            self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point+=player.point
+                            player.point /= 2
+                            if player.point < 5:
+                                self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)])
+                                self.map[player.coordinate.x][player.coordinate.y]='r'
+                            else:
+                                self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)].levelChanger()
+                                self.map[player.coordinate.x][player.coordinate.y] = 'r'
+                                self.sendPlayerRandom(player)
+                            # ghost pacmani yedi, pacmani random bir yere tasi
+                            
+                    elif self.map[player.coordinate.x+1][player.coordinate.y] == 'P':
+                        return
+                    elif self.map[player.coordinate.x+1][player.coordinate.y] == 'A' or self.map[player.coordinate.x+1][player.coordinate.y] == 'B' or self.map[player.coordinate.x+1][player.coordinate.y] == 'T':
+                        if player.canEatForage(self.forageDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)]):
+                            player.point += self.forageDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point 
+                            self.deleteForage(self.forageDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)])
+                            del self.playerDict[player.coordinate.key]
+                            player.coordinate.x += 1
+                            player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
+                            self.playerDict[player.coordinate.key] = player
+                            self.map[player.coordinate.x][player.coordinate.y] = 'P'
+                            self.map[player.coordinate.x-1][player.coordinate.y] = 'r'
+                        else:
+                            return
+
+                    else:
                         del self.playerDict[player.coordinate.key]
                         player.coordinate.x += 1
                         player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
                         self.playerDict[player.coordinate.key] = player
                         self.map[player.coordinate.x][player.coordinate.y] = 'P'
                         self.map[player.coordinate.x-1][player.coordinate.y] = 'r'
-                    else:
-                        return
-
+                    freelock(current,next)
                 else:
-                    del self.playerDict[player.coordinate.key]
-                    player.coordinate.x += 1
-                    player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
-                    self.playerDict[player.coordinate.key] = player
-                    self.map[player.coordinate.x][player.coordinate.y] = 'P'
-                    self.map[player.coordinate.x-1][player.coordinate.y] = 'r'
-                
+                    return                   
             elif direction == "r":
-                if player.coordinate.y + 1 == 40:
-                    return
-                elif self.map[player.coordinate.x][player.coordinate.y+1] == 'P': 
-                    return
-                elif self.map[player.coordinate.x][player.coordinate.y+1] == 'X':
-                    if player.level == 3:
-                        del self.playerDict[player.coordinate.key]
-                        player.coordinate.y += 1
-                        player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
-                        self.playerDict[player.coordinate.key] = player
-                        self.map[player.coordinate.x][player.coordinate.y] = "P"
-                        self.map[player.coordinate.x][player.coordinate.y-1] = "r"
-                elif self.map[player.coordinate.x][player.coordinate.y+1] == 'G':
-                    if player.canEatGhost(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)]):
-                        player.point += self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point 
-                        self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)])
-                        player.coordinate.y += 1
-                        player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
-                        self.playerDict[player.coordinate.key] = player
-                        self.map[player.coordinate.x][player.coordinate.y] = 'P'
-                        self.map[player.coordinate.x][player.coordinate.y-1] = 'r'
-                    else:
-                        self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point+=player.point
-                        player.point /= 2
-                        if player.point < 5:
-                            self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)])
-                            self.map[player.coordinate.x][player.coordinate.y]='r'
-                        else:
-                            self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)].levelChanger()
-                            self.map[player.coordinate.x][player.coordinate.y] = 'r'
-                            self.sendPlayerRandom(player)
-                        
-                elif self.map[player.coordinate.x][player.coordinate.y+1] == 'P':
-                    return
-                elif self.map[player.coordinate.x][player.coordinate.y+1] == 'A' or self.map[player.coordinate.x][player.coordinate.y+1] == 'B' or self.map[player.coordinate.x][player.coordinate.y+1] == 'T':
-                    if player.canEatForage(self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)]):
-                        player.point += self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point 
-                        self.deleteForage(self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)])
-                        del self.playerDict[player.coordinate.key]
-                        player.coordinate.y += 1
-                        player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
-                        self.playerDict[player.coordinate.key] = player
-                        self.map[player.coordinate.x][player.coordinate.y] = 'P'
-                        self.map[player.coordinate.x][player.coordinate.y-1] = 'r'
-                    else:
-                        return
+                if player.coordinate.y + 1 < 40:
+                    next = Coordinate(player.coordinate.x,player.coordinate.y+1)
+                    current = player.coordinate
+                    getlock(player.coordinate,next)
 
+                    if self.map[player.coordinate.x][player.coordinate.y+1] == 'P': 
+                        return
+                    elif self.map[player.coordinate.x][player.coordinate.y+1] == 'X':
+                        if player.level == 3:
+                            del self.playerDict[player.coordinate.key]
+                            player.coordinate.y += 1
+                            player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
+                            self.playerDict[player.coordinate.key] = player
+                            self.map[player.coordinate.x][player.coordinate.y] = "P"
+                            self.map[player.coordinate.x][player.coordinate.y-1] = "r"
+                    elif self.map[player.coordinate.x][player.coordinate.y+1] == 'G':
+                        if player.canEatGhost(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)]):
+                            player.point += self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point 
+                            self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)])
+                            player.coordinate.y += 1
+                            player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
+                            self.playerDict[player.coordinate.key] = player
+                            self.map[player.coordinate.x][player.coordinate.y] = 'P'
+                            self.map[player.coordinate.x][player.coordinate.y-1] = 'r'
+                        else:
+                            self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point+=player.point
+                            player.point /= 2
+                            if player.point < 5:
+                                self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)])
+                                self.map[player.coordinate.x][player.coordinate.y]='r'
+                            else:
+                                self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)].levelChanger()
+                                self.map[player.coordinate.x][player.coordinate.y] = 'r'
+                                self.sendPlayerRandom(player)
+                           
+                    elif self.map[player.coordinate.x][player.coordinate.y+1] == 'P':
+                        return
+                    elif self.map[player.coordinate.x][player.coordinate.y+1] == 'A' or self.map[player.coordinate.x][player.coordinate.y+1] == 'B' or self.map[player.coordinate.x][player.coordinate.y+1] == 'T':
+                        if player.canEatForage(self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)]):
+                            player.point += self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point 
+                            self.deleteForage(self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)])
+                            del self.playerDict[player.coordinate.key]
+                            player.coordinate.y += 1
+                            player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
+                            self.playerDict[player.coordinate.key] = player
+                            self.map[player.coordinate.x][player.coordinate.y] = 'P'
+                            self.map[player.coordinate.x][player.coordinate.y-1] = 'r'
+                        else:
+                            return
+
+                    else:
+                        del self.playerDict[player.coordinate.key]
+                        player.coordinate.y += 1
+                        player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
+                        self.playerDict[player.coordinate.key] = player
+                        self.map[player.coordinate.x][player.coordinate.y] = 'P'
+                        self.map[player.coordinate.x][player.coordinate.y-1] = 'r'
+                    freelock(current,next)         
                 else:
-                    del self.playerDict[player.coordinate.key]
-                    player.coordinate.y += 1
-                    player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
-                    self.playerDict[player.coordinate.key] = player
-                    self.map[player.coordinate.x][player.coordinate.y] = 'P'
-                    self.map[player.coordinate.x][player.coordinate.y-1] = 'r'
-           
-           
-           
-           
-           
-           
+                    return
             elif direction == "u":
-                if player.coordinate.x - 1 == -1:
-                    return
-                elif self.map[player.coordinate.x-1][player.coordinate.y] == 'P': 
-                    return
-                elif self.map[player.coordinate.x-1][player.coordinate.y] == 'X':
-                    if player.level == 3:
-                        del self.playerDict[player.coordinate.key]
-                        player.coordinate.x -= 1
-                        player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
-                        self.playerDict[player.coordinate.key] = player
-                        self.map[player.coordinate.x][player.coordinate.y] = "P"
-                        self.map[player.coordinate.x+1][player.coordinate.y] = "r"
-                elif self.map[player.coordinate.x-1][player.coordinate.y] == 'G':
-                    
-                    if player.canEatGhost(self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)]):
-                        
-                        player.point += self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point 
-                        self.deletePlayer(self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)])
-                        player.coordinate.x -= 1 
-                        player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
-                        self.playerDict[player.coordinate.key] = player
-                        self.map[player.coordinate.x][player.coordinate.y] = 'P'
-                        self.map[player.coordinate.x+1][player.coordinate.y] = 'r'
-                    else:
-                        self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point+=player.point
-                        player.point /= 2
-                        if player.point < 5:
-                            self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)])
-                            self.map[player.coordinate.x][player.coordinate.y]='r'
-                        else:
-                            self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)].levelChanger()
-                            self.map[player.coordinate.x][player.coordinate.y] = 'r'
-                            self.sendPlayerRandom(player)
-                        
-                elif self.map[player.coordinate.x-1][player.coordinate.y] == 'P':
-                    return
-                elif self.map[player.coordinate.x-1][player.coordinate.y] == 'A' or self.map[player.coordinate.x-1][player.coordinate.y] == 'B' or self.map[player.coordinate.x-1][player.coordinate.y] == 'T':
-                    if player.canEatForage(self.forageDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)]):
-                        player.point += self.forageDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point 
-                        self.deleteForage(self.forageDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)])
-                        del self.playerDict[player.coordinate.key]
-                        player.coordinate.x -= 1
-                        player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
-                        self.playerDict[player.coordinate.key] = player
-                        self.map[player.coordinate.x][player.coordinate.y] = 'P'
-                        self.map[player.coordinate.x+1][player.coordinate.y] = 'r'
-                    else:
-                        return
+                if player.coordinate.x - 1 > -1:
+                    next = Coordinate(player.coordinate.x-1,player.coordinate.y)
+                    current = player.coordinate
+                    getlock(player.coordinate,next)
 
+                    if self.map[player.coordinate.x-1][player.coordinate.y] == 'P': 
+                        return
+                    elif self.map[player.coordinate.x-1][player.coordinate.y] == 'X':
+                        if player.level == 3:
+                            del self.playerDict[player.coordinate.key]
+                            player.coordinate.x -= 1
+                            player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
+                            self.playerDict[player.coordinate.key] = player
+                            self.map[player.coordinate.x][player.coordinate.y] = "P"
+                            self.map[player.coordinate.x+1][player.coordinate.y] = "r"
+                    elif self.map[player.coordinate.x-1][player.coordinate.y] == 'G':
+                       
+                        if player.canEatGhost(self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)]):
+                           
+                            player.point += self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point 
+                            self.deletePlayer(self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)])
+                            player.coordinate.x -= 1 
+                            player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
+                            self.playerDict[player.coordinate.key] = player
+                            self.map[player.coordinate.x][player.coordinate.y] = 'P'
+                            self.map[player.coordinate.x+1][player.coordinate.y] = 'r'
+                        else:
+                            self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point+=player.point
+                            player.point /= 2
+                            if player.point < 5:
+                                self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)])
+                                self.map[player.coordinate.x][player.coordinate.y]='r'
+                            else:
+                                self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)].levelChanger()
+                                self.map[player.coordinate.x][player.coordinate.y] = 'r'
+                                self.sendPlayerRandom(player)
+                           
+                    elif self.map[player.coordinate.x-1][player.coordinate.y] == 'P':
+                        return
+                    elif self.map[player.coordinate.x-1][player.coordinate.y] == 'A' or self.map[player.coordinate.x-1][player.coordinate.y] == 'B' or self.map[player.coordinate.x-1][player.coordinate.y] == 'T':
+                        if player.canEatForage(self.forageDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)]):
+                            player.point += self.forageDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point 
+                            self.deleteForage(self.forageDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)])
+                            del self.playerDict[player.coordinate.key]
+                            player.coordinate.x -= 1
+                            player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
+                            self.playerDict[player.coordinate.key] = player
+                            self.map[player.coordinate.x][player.coordinate.y] = 'P'
+                            self.map[player.coordinate.x+1][player.coordinate.y] = 'r'
+                        else:
+                            return
+
+                    else:
+                        del self.playerDict[player.coordinate.key]
+                        player.coordinate.x -= 1
+                        player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
+                        self.playerDict[player.coordinate.key] = player
+                        self.map[player.coordinate.x][player.coordinate.y] = 'P'
+                        self.map[player.coordinate.x+1][player.coordinate.y] = 'r'
+                    freelock(current,next)    
                 else:
-                    del self.playerDict[player.coordinate.key]
-                    player.coordinate.x -= 1
-                    player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
-                    self.playerDict[player.coordinate.key] = player
-                    self.map[player.coordinate.x][player.coordinate.y] = 'P'
-                    self.map[player.coordinate.x+1][player.coordinate.y] = 'r'
-                    
-           
-           
-           
-           
+                    return           
             else:
-                if player.coordinate.y - 1 == -1:
-                    return
-                elif self.map[player.coordinate.x][player.coordinate.y-1] == 'P': 
-                    return
-                elif self.map[player.coordinate.x][player.coordinate.y-1] == 'X':
-                    if player.level == 3:
-                        del self.playerDict[player.coordinate.key]
-                        player.coordinate.y -= 1
-                        player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
-                        self.playerDict[player.coordinate.key] = player
-                        self.map[player.coordinate.x][player.coordinate.y] = "P"
-                        self.map[player.coordinate.x][player.coordinate.y+1] = "r"
-                elif self.map[player.coordinate.x][player.coordinate.y-1] == 'G':
-                    if player.canEatGhost(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)]):
-                        player.point += self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point 
-                        self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)])
-                        player.coordinate.y -= 1
-                        player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y) 
-                        self.playerDict[player.coordinate.key] = player
-                        self.map[player.coordinate.x][player.coordinate.y] = 'P'
-                        self.map[player.coordinate.x][player.coordinate.y+1] = 'r'
-                    else:
-                        self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point+=player.point
-                        player.point /= 2
-                        if player.point < 5:
-                            self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)])
-                            self.map[player.coordinate.x][player.coordinate.y]='r'
-                        else:
-                            self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)].levelChanger()
-                            self.map[player.coordinate.x][player.coordinate.y] = 'r'
-                            self.sendPlayerRandom(player)
-                        
-                elif self.map[player.coordinate.x][player.coordinate.y-1] == 'P':
-                    return
-                elif self.map[player.coordinate.x][player.coordinate.y-1] == 'A' or self.map[player.coordinate.x][player.coordinate.y-1] == 'B' or self.map[player.coordinate.x][player.coordinate.y-1] == 'T':
-                    if player.canEatForage(self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)]):
-                        player.point += self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point 
-                        self.deleteForage(self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)])
-                        del self.playerDict[player.coordinate.key]
-                        player.coordinate.y -= 1
-                        player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
-                        self.playerDict[player.coordinate.key] = player
-                        self.map[player.coordinate.x][player.coordinate.y] = 'P'
-                        self.map[player.coordinate.x][player.coordinate.y+1] = 'r'
-                    else:
+                if player.coordinate.y - 1 > -1:
+                    next = Coordinate(player.coordinate.x,player.coordinate.y-1)
+                    current = player.coordinate
+                    getlock(player.coordinate,next)
+       
+                    if self.map[player.coordinate.x][player.coordinate.y-1] == 'P': 
                         return
+                    elif self.map[player.coordinate.x][player.coordinate.y-1] == 'X':
+                        if player.level == 3:
+                            del self.playerDict[player.coordinate.key]
+                            player.coordinate.y -= 1
+                            player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
+                            self.playerDict[player.coordinate.key] = player
+                            self.map[player.coordinate.x][player.coordinate.y] = "P"
+                            self.map[player.coordinate.x][player.coordinate.y+1] = "r"
+                    elif self.map[player.coordinate.x][player.coordinate.y-1] == 'G':
+                        if player.canEatGhost(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)]):
+                            player.point += self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point 
+                            self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)])
+                            player.coordinate.y -= 1
+                            player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y) 
+                            self.playerDict[player.coordinate.key] = player
+                            self.map[player.coordinate.x][player.coordinate.y] = 'P'
+                            self.map[player.coordinate.x][player.coordinate.y+1] = 'r'
+                        else:
+                            self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point+=player.point
+                            player.point /= 2
+                            if player.point < 5:
+                                self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)])
+                                self.map[player.coordinate.x][player.coordinate.y]='r'
+                            else:
+                                self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)].levelChanger()
+                                self.map[player.coordinate.x][player.coordinate.y] = 'r'
+                                self.sendPlayerRandom(player)
+                           
+                    elif self.map[player.coordinate.x][player.coordinate.y-1] == 'P':
+                        return
+                    elif self.map[player.coordinate.x][player.coordinate.y-1] == 'A' or self.map[player.coordinate.x][player.coordinate.y-1] == 'B' or self.map[player.coordinate.x][player.coordinate.y-1] == 'T':
+                        if player.canEatForage(self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)]):
+                            player.point += self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point 
+                            self.deleteForage(self.forageDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)])
+                            del self.playerDict[player.coordinate.key]
+                            player.coordinate.y -= 1
+                            player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
+                            self.playerDict[player.coordinate.key] = player
+                            self.map[player.coordinate.x][player.coordinate.y] = 'P'
+                            self.map[player.coordinate.x][player.coordinate.y+1] = 'r'
+                        else:
+                            return
 
 
+                    else:
+                        del self.playerDict[player.coordinate.key]
+                        player.coordinate.y -= 1
+                        player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
+                        self.playerDict[player.coordinate.key] = player
+                        self.map[player.coordinate.x][player.coordinate.y] = 'P'
+                        self.map[player.coordinate.x][player.coordinate.y+1] = 'r'
+                        freelock(current,next)
                 else:
-                    del self.playerDict[player.coordinate.key]
-                    player.coordinate.y -= 1
-                    player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
-                    self.playerDict[player.coordinate.key] = player
-                    self.map[player.coordinate.x][player.coordinate.y] = 'P'
-                    self.map[player.coordinate.x][player.coordinate.y+1] = 'r'
-                  
+                   return  
             player.levelChanger()
