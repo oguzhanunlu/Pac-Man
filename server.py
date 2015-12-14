@@ -75,7 +75,7 @@ class Agent(Thread):
 
    def run(self):
       while 1:
-         self.inp = self.connection.recv(10000)
+         self.inp = self.connection.recv(1000000)
          if not self.inp:
             continue
          self.command = self.inp.split()
@@ -178,7 +178,7 @@ class Server:
       self.host = ''
       self.port = 50007
       self.backlog = 5
-      self.size = 10000
+      self.size = 1000000
       self.server = None
       self.agents = []
 

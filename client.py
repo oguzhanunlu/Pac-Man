@@ -9,7 +9,7 @@ while(1):
    inp  = raw_input("Enter command: ")
    command = inp.split(' ')
    s.send(inp)
-   data=s.recv(10000)
+   data=s.recv(1000000)
    if data=="Invalid command...":
       print data
    elif data=="Successfully closed.":
