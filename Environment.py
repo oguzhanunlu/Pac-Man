@@ -35,8 +35,8 @@ class Environment(object):
         lock.acquire()
         while 1:
             if locked[c1.x][c1.y]==True and locked[c2.x][c2.y]==True:
-                locked[c1.x][c1.y]==False
-                locked[c2.x][c2.y]==False
+                locked[c1.x][c1.y]=False
+                locked[c2.x][c2.y]=False
                 cond.release()
                 return
             else:
@@ -49,8 +49,8 @@ class Environment(object):
         global loced
         global cond
         lock.acquire()
-        locked[c1.x][c1.y]==True
-        locked[c2.x][c2.y]==True
+        locked[c1.x][c1.y]=True
+        locked[c2.x][c2.y]=True
         cond.notifyAll()
         lock.release()
     def save(self):
