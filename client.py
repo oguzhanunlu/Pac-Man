@@ -1,12 +1,27 @@
 import socket
 import time
 import cPickle as pickle
-HOST = '10.0.0.10'                 # Symbolic name meaning all available interfaces
+HOST = ''                 # Symbolic name meaning all available interfaces
 PORT = 50007              # Arbitrary non-privileged port
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
+fileinp=[]
 while(1):
-   inp  = raw_input("Enter command: ")
+   
+   if len(fileinp)>0:
+      inp=fileinp[0]
+      fileinp=fileinp[1:]
+   else:
+      inp  = raw_input("Enter command: ")
+      if inp == '':
+         continue  
+   if inp[:4]=="File":
+      fileHandler=open(inp[5:])
+      fileinp=fileHandler.readlines()
+      fileHandler.close()
+      inp=fileinp[0]
+      fileinp=fileinp[1:]
+   
    command = inp.split(' ')
    s.send(inp)
    data=s.recv(1000000)

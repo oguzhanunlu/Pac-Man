@@ -94,7 +94,7 @@ class Agent(Thread):
             self.env.sendPlayerRandom(self.p)
             self.a={"map":self.env.getMap(self.p,5,5),"scoreboard":self.env.getScoreBoard()}
             print self.a["map"]
-            self.out = pickle.dumps(self.a,indent = 4)
+            self.out = pickle.dumps(self.a)
             self.connection.send(self.out)            
          
          elif (self.command[0] =="signup" ):

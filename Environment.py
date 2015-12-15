@@ -178,19 +178,30 @@ class Environment(object):
         x2 = player.coordinate.x + width
         y1 = player.coordinate.y - height
         y2 = player.coordinate.y + height
-
+        bufx=0
+        tufx=0
+        bufy=0
+        tufy=0
         if x1 <= 0:
+            bufx=x1
+            tufx=-bufx
             x1 = 0
-        if x2 > 39:
+        elif x2 > 39:
+            bufx=x2-39
             x2 = 39
         if y1 <= 0:
+            bufy=y1
+            tufy=-bufy
             y1 = 0
-        if y2 > 39:
+        elif y2 > 39:
+            bufy=y2-39
             y2 = 39
-            
-        for i,k in zip(range(x1,x2+1),range(2*width+1)):
-            for j,l in zip(range(y1,y2+1),range(2*height+1)):
-                player.frame[k][l] = self.map[i][j],
+        
+        
+        print bufx,bufy,tufx,tufy
+        for i,k in zip(range(x1,x2+1),range(2*width+1-abs(bufx))):
+            for j,l in zip(range(y1,y2+1),range(2*height+1-abs(bufy))):
+                player.frame[k+tufx][l+tufy] = self.map[i][j]
         return player.frame
         
         
