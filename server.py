@@ -128,9 +128,9 @@ class Agent(Thread):
          
          elif self.command[0]=="l" or self.command[0]=="r" or self.command[0]=="u" or self.command[0]=="d":
             self.dead = False
-            print "before move"
-            print self.p.type, self.p.coordinate.x, self.p.coordinate.y
-            print
+            #print "before move"
+            #print self.p.type, self.p.coordinate.x, self.p.coordinate.y
+            #print
             self.p.frame=[["Q" for i in xrange(11)] for i in xrange(11)]
             try:
                if self.env.playerDict[str(self.p.coordinate.x)+'.'+str(self.p.coordinate.y)].type != self.p.type:
@@ -139,20 +139,20 @@ class Agent(Thread):
                self.connection.send("Olmussun yahu")
                self.env.usernames.remove(self.p.name)
                self.a={"message":"Ogren de gel :) AHAHAHA","map":self.env.getMap(self.p,5,5),"scoreboard":self.env.getScoreBoard()}
-               print self.a["map"]
+               #print self.a["map"]
                
             if not self.dead :   
                
                self.env.move(self.p,self.command[0])
-               print "after move"
-               print self.p.name,self.p.type, self.p.coordinate.x, self.p.coordinate.y
-               print "bizim canimiz yanmaz gardas"
+               #print "after move"
+               #print self.p.name,self.p.type, self.p.coordinate.x, self.p.coordinate.y
+               #print "bizim canimiz yanmaz gardas"
                self.a={"map":self.env.getMap(self.p,5,5),"scoreboard":self.env.getScoreBoard()}
-               print self.a["map"]
+               #print self.a["map"]
                self.out = pickle.dumps(self.a)
                self.connection.send(self.out)
                
-            print "nevrim dondu"
+            #print "nevrim dondu"
          
          
          else:
