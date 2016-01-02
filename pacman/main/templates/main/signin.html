@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign In</title>
+</head>
+<body>
+<form action="/game/" method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Play">
+</form>
+</body>
+</html>

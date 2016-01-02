@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game</title>
+</head>
+<body>
+<script>
+    mapp = {{ map|safe }} ;
+    document.write("<table style='width=10%'>");
+    for (var i = 0; i < 11; i++){
+        document.write("<tr>");
+        for (var j = 0; j < 11; j++){
+            if (mapp[i][j] == 'r'){
+                mapp[i][j] = 'R';
+            }
+            document.write("<td>");
+            document.write(mapp[i][j]+" ");
+
+        }
+        document.write("<br>");
+        document.write("</td>");
+        document.write("</tr>");
+    }
+    document.write("</table>");
+    document.write("<br>");
+    score={{scoreboard|safe }};
+    document.write("#############SCOREBOARD#############");
+    document.write("<table style='width=10%'>");
+    document.write("<br>");
+    document.write("<tr>");
+    for(var i = 0; i<score[0].length;i++ ){
+        //document.write("<td>");
+        document.write(score[0][i]+"   " + score[1][i] );
+        document.write("<br/>");
+
+    }
+    //document.write("</td>");
+    document.write("</tr>");
+    document.write("</table>");
+</script>
+</body>
+</html>
