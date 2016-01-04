@@ -5,39 +5,63 @@
     <title>Game</title>
 </head>
 <body>
-<script>
-    mapp = {{ map|safe }} ;
-    document.write("<table style='width=10%'>");
-    for (var i = 0; i < 11; i++){
-        document.write("<tr>");
-        for (var j = 0; j < 11; j++){
-            if (mapp[i][j] == 'r'){
-                mapp[i][j] = 'R';
+    {% if message == "This username already exists." %}
+        {{ message }}
+    {% else %}
+        <script>
+            mapp = {{ map|safe }} ;
+            document.write("<table style='width=10%'>");
+            for (var i = 0; i < 11; i++){
+                document.write("<tr>");
+                for (var j = 0; j < 11; j++){
+                    if (mapp[i][j] == 'r'){
+                        mapp[i][j] = 'R';
+                    }
+                    document.write("<td>");
+                    document.write(mapp[i][j]+" ");
+
+                }
+                document.write("<br>");
+                document.write("</td>");
+                document.write("</tr>");
             }
-            document.write("<td>");
-            document.write(mapp[i][j]+" ");
+            document.write("</table>");
+            document.write("<br>");
+            score={{scoreboard|safe }};
+            document.write("#############SCOREBOARD#############");
+            document.write("<table style='width=10%'>");
+            document.write("<br>");
+            document.write("<tr>");
+            for(var i = 0; i<score[0].length;i++ ){
+                //document.write("<td>");
+                document.write(score[0][i]+"   " + score[1][i] );
+                document.write("<br/>");
 
-        }
-        document.write("<br>");
-        document.write("</td>");
-        document.write("</tr>");
-    }
-    document.write("</table>");
-    document.write("<br>");
-    score={{scoreboard|safe }};
-    document.write("#############SCOREBOARD#############");
-    document.write("<table style='width=10%'>");
-    document.write("<br>");
-    document.write("<tr>");
-    for(var i = 0; i<score[0].length;i++ ){
-        //document.write("<td>");
-        document.write(score[0][i]+"   " + score[1][i] );
-        document.write("<br/>");
+            }
+            //document.write("</td>");
+            document.write("</tr>");
+            document.write("</table>");
+        </script>
+        <form action="/game/" method="GET">
+            <input type="hidden" name="dir" value="l" />
+            <input type="submit" value="Left">
+        </form>
+        <form action="/game/" method="GET">
+            <input type="hidden" name="dir" value="r" />
+            <input type="submit" value="Right">
+        </form>
+        <form action="/game/" method="GET">
+            <input type="hidden" name="dir" value="u" />
+            <input type="submit" value="Up">
+        </form>
+        <form action="/game/" method="GET">
+            <input type="hidden" name="dir" value="d" />
+            <input type="submit" value="Down">
+        </form>
+        <form action="/quit/" method="GET">
 
-    }
-    //document.write("</td>");
-    document.write("</tr>");
-    document.write("</table>");
-</script>
+            <input type="submit" value="Quit">
+        </form>
+    {% endif %}
 </body>
 </html>

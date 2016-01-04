@@ -52,6 +52,7 @@ class Agent(Thread):
       print "geldim XD"
    def __init__(self, connection, address, server):
       Thread.__init__(self)
+      print "selam dunyali, ben bir threadim"
       self.connection = connection
       self.address = address
       self.server = server
@@ -92,7 +93,7 @@ class Agent(Thread):
                self.p = pickle.load(f)
             #self.connection.send("Logged in.")
             self.env.sendPlayerRandom(self.p)
-            self.a={"map":self.env.getMap(self.p,5,5),"scoreboard":self.env.getScoreBoard()}
+            self.a={"message": "Player is created successfully.", "map":self.env.getMap(self.p,5,5),"scoreboard":self.env.getScoreBoard()}
             print self.a["map"]
             self.out = pickle.dumps(self.a)
             self.connection.send(self.out)            
@@ -131,7 +132,7 @@ class Agent(Thread):
             #print "before move"
             #print self.p.type, self.p.coordinate.x, self.p.coordinate.y
             #print
-            self.p.frame=[["Q" for i in xrange(11)] for i in xrange(11)]
+            #self.p.frame=[["Q" for i in xrange(11)] for i in xrange(11)]
             try:
                if self.env.playerDict[str(self.p.coordinate.x)+'.'+str(self.p.coordinate.y)].type != self.p.type:
                   self.dead = True
@@ -147,7 +148,7 @@ class Agent(Thread):
                #print "after move"
                #print self.p.name,self.p.type, self.p.coordinate.x, self.p.coordinate.y
                #print "bizim canimiz yanmaz gardas"
-               self.a={"map":self.env.getMap(self.p,5,5),"scoreboard":self.env.getScoreBoard()}
+               self.a={"message":"in","map":self.env.getMap(self.p,5,5),"scoreboard":self.env.getScoreBoard()}
                #print self.a["map"]
                self.out = pickle.dumps(self.a)
                self.connection.send(self.out)
