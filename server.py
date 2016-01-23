@@ -84,16 +84,26 @@ class Agent(Thread):
          
          if self.command[0] =="quit":
             with open("pickle/"+self.p.name,'wb') as f:
-               json.dumps(self.p,f)
+               self.pdict = vars(self.p)
+               self.c = Coordinate(self.pdict['coordinate'].x, self.pdict['coordinate'].y)
+               del self.pdict['coordinate']
+               json.dump(vars(self.p),f)
+            self.p.coordinate = self.c
             self.env.deletePlayer(self.p)
             self.connection.send("Successfully closed.")
             break
 
          elif (self.command[0] =="signin" ):
             with open("pickle/"+self.command[1], 'rb') as f:
-               self.p = json.loads(f)
+               self.pdict = json.load(f)
+            self.kind = self.pdict['type']
+            while 1:
+                self.c = self.randomCoordinate(self.kind)
+                if self.env.map[self.c.x][self.c.y]=='r':
+                    break
+            self.p = PlayerFactory().new(self.pdict['name'],self.kind,self.pdict['point'],self.pdict['level'],self.c)   
+            self.env.addPlayer(self.p)
             #self.connection.send("Logged in.")
-            self.env.sendPlayerRandom(self.p)
             self.a={"message": "Player is created successfully.", "map":self.env.getMap(self.p,5,5),"scoreboard":self.env.getScoreBoard()}
             print self.a["map"]
             self.out = json.dumps(self.a)
@@ -151,7 +161,7 @@ class Agent(Thread):
                #print "bizim canimiz yanmaz gardas"
                self.a={"message":"in","map":self.env.getMap(self.p,5,5),"scoreboard":self.env.getScoreBoard()}
                #print self.a["map"]
-               self.out = json.dumps(self.a)
+               self.out= json.dumps(self.a)
                self.connection.send(self.out)
                
             #print "nevrim dondu"
