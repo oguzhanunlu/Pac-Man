@@ -9,7 +9,8 @@
         {{ message }}
     {% else %}
         <script>
-            mapp = {{ map|safe }} ;
+            var mapp = {{ map|safe }};
+            console.log(typeof mapp);
             document.write("<table style='width=10%'>");
             for (var i = 0; i < 11; i++){
                 document.write("<tr>");

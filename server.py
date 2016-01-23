@@ -8,6 +8,7 @@ from threading import *
 import socket
 import time
 import cPickle as pickle
+import json
 
 
 class Agent(Thread):
@@ -83,19 +84,19 @@ class Agent(Thread):
          
          if self.command[0] =="quit":
             with open("pickle/"+self.p.name,'wb') as f:
-               pickle.dump(self.p,f)
+               json.dumps(self.p,f)
             self.env.deletePlayer(self.p)
             self.connection.send("Successfully closed.")
             break
 
          elif (self.command[0] =="signin" ):
             with open("pickle/"+self.command[1], 'rb') as f:
-               self.p = pickle.load(f)
+               self.p = json.loads(f)
             #self.connection.send("Logged in.")
             self.env.sendPlayerRandom(self.p)
             self.a={"message": "Player is created successfully.", "map":self.env.getMap(self.p,5,5),"scoreboard":self.env.getScoreBoard()}
             print self.a["map"]
-            self.out = pickle.dumps(self.a)
+            self.out = json.dumps(self.a)
             self.connection.send(self.out)            
          
          elif (self.command[0] =="signup" ):
@@ -121,7 +122,7 @@ class Agent(Thread):
                self.a={"map":self.env.getMap(self.p,5,5),"scoreboard":self.env.getScoreBoard()}
                print self.a["map"]
                try:                
-                  self.out = pickle.dumps(self.a)
+                  self.out = json.dumps(self.a)
                   self.connection.send(self.out)
                   print "data gitti"
                except:
@@ -132,7 +133,7 @@ class Agent(Thread):
             #print "before move"
             #print self.p.type, self.p.coordinate.x, self.p.coordinate.y
             #print
-            #self.p.frame=[["Q" for i in xrange(11)] for i in xrange(11)]
+            self.p.frame=[["Q" for i in xrange(11)] for i in xrange(11)]
             try:
                if self.env.playerDict[str(self.p.coordinate.x)+'.'+str(self.p.coordinate.y)].type != self.p.type:
                   self.dead = True
@@ -150,7 +151,7 @@ class Agent(Thread):
                #print "bizim canimiz yanmaz gardas"
                self.a={"message":"in","map":self.env.getMap(self.p,5,5),"scoreboard":self.env.getScoreBoard()}
                #print self.a["map"]
-               self.out = pickle.dumps(self.a)
+               self.out = json.dumps(self.a)
                self.connection.send(self.out)
                
             #print "nevrim dondu"

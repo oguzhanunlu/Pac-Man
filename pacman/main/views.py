@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpRequest
 
 from socket import *
 import cPickle as pickle
-
+import json
 from .forms import *
 
 # Create your views here.
@@ -48,7 +48,14 @@ def game(request):
         dir = request.build_absolute_uri()[-1]
         s.send(dir)
         response = s.recv(1000000)
-        response = pickle.loads(response)
+        response = json.loads(response)
+        for i in range(0,len(response['map'])):
+            for j in range(0,len(response['map'][i])):
+                response['map'][i][j] = response['map'][i][j].encode('utf8')
+
+        for i in range (0,len(response['scoreboard'][0])):
+            response['scoreboard'][0][i] = response['scoreboard'][0][i].encode('utf8')
+
         if response['message'] == "Olmussun yahu":
             message = "<b>Life hurts a lot more than death. Have a nice day.</b>"
             return render(request, 'main/game.html', {'message': message})
@@ -72,7 +79,14 @@ def game(request):
 
             s.send("signin "+name)
             response = s.recv(1000000)
-            response = pickle.loads(response)
+            response = json.loads(response)
+            for i in range(0,len(response['map'])):
+                for j in range(0,len(response['map'][i])):
+                    response['map'][i][j] = response['map'][i][j].encode('utf8')
+
+            for i in range (0,len(response['scoreboard'][0])):
+                response['scoreboard'][0][i] = response['scoreboard'][0][i].encode('utf8')
+
             print "asasd ", response
             if response['message'] == "Player is created successfully.":
                 sessions[name]=s
@@ -80,6 +94,7 @@ def game(request):
                 print "ress: ", response
                 response['message']="yes"
                 return render(request,'main/game.html',response)
+
         else: # signup
             name = data['name']
             ptype = data['ptype']
@@ -90,9 +105,21 @@ def game(request):
             else:
                 sessions[name]=s
                 request.session["oguzhan"]=name
-                response=pickle.loads(response)
+                response=json.loads(response)
+
+                for i in range(0,len(response['map'])):
+                    for j in range(0,len(response['map'][i])):
+                        response['map'][i][j] = response['map'][i][j].encode('utf8')
+
+                for i in range (0,len(response['scoreboard'][0])):
+                    response['scoreboard'][0][i] = response['scoreboard'][0][i].encode('utf8')
+
+
                 print "resp: ", response
                 response['message']="yes"
+                print "burada"
+                print response['map'][0]
+
                 return render(request,'main/game.html',response)
         #s.close()
         print 'data: '+data['name']
