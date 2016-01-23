@@ -8,6 +8,10 @@ __pycache__/
 # C extensions
 *.so
 
+#project pacman specific
+pickle/*
+pacman/db.sqlite3
+
 # Distribution / packaging
 .Python
 env/
