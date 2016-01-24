@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpRequest
+from django.http import HttpResponse
 
 from socket import *
 import cPickle as pickle
@@ -44,6 +44,25 @@ def game(request):
     else:
         s = socket(AF_INET, SOCK_STREAM)
         s.connect(("127.0.0.1", 50007))
+
+    if request.is_ajax():
+        dir = request.build_absolute_uri()[-1]
+        s.send(dir)
+        response = s.recv(1000000)
+        response = json.loads(response)
+        for i in range(0,len(response['map'])):
+            for j in range(0,len(response['map'][i])):
+                response['map'][i][j] = response['map'][i][j].encode('utf8')
+
+        for i in range (0,len(response['scoreboard'][0])):
+            response['scoreboard'][0][i] = response['scoreboard'][0][i].encode('utf8')
+
+        if response['message'] == "Olmussun yahu":
+            message = "<b>Life hurts a lot more than death. Have a nice day.</b>"
+            return render(request, 'main/game.html', {'message': message})
+        else:
+            return HttpResponse(json.dumps(response))
+
     if request.method == "GET":
         dir = request.build_absolute_uri()[-1]
         s.send(dir)

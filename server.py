@@ -48,7 +48,7 @@ class Agent(Thread):
             counter+=1
             if counter ==1280:
                break        
-      env.getAllMap()             
+      #env.getAllMap()             
    except:
       print "geldim XD"
    def __init__(self, connection, address, server):

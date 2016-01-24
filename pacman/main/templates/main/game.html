@@ -14,103 +14,142 @@
             padding: 0;
         }
         img {margin:0;padding:0; display:block;}
-</style>
+    </style>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 </head>
 <body>
-    {% if message == "This username already exists." %}
+     {% if message == "This username already exists." %}
         {{ message }}
     {% else %}
         <script>
-            var mapp;
-            var score;
-           /* function httpGetAsync(theUrl)
-            {
-                var xmlHttp = new XMLHttpRequest();
-                xmlHttp.onreadystatechange = function() {
-                    if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-                        mapp=xmlHttp.responseText['map'];
-                        console.log(mapp);
-                        score=xmlHttp.responseText['scoreboard'];
-                }
-                xmlHttp.open("GET", theUrl, true); // true for asynchronous
-                xmlHttp.send(null);
-            }
-            document.onkeydown = checkKey;
-            function checkKey(e) {
+            //$(document).ready(function(){
+                //isKeyPressed=false;
+                document.onkeydown = checkKey;
+                function checkKey(e) {
+                    //isKeyPressed=true;
+                    console.log('key pressed');
+                    e = e || window.event;
 
-                e = e || window.event;
-
-                if (e.keyCode == '38') {
-                    // up arrow
-                alert("up");
-               //     httpGetAsync('/?dir=u',{{map|safe}});
-
-                }
-                else if (e.keyCode == '40') {
-                    // down arrow
-                }
-                else if (e.keyCode == '37') {
-                   // left arrow
-                    alert("left");
-                    httpGetAsync('/?dir=l');
-                }
-                else if (e.keyCode == '39') {
-                   // right arrow
-                }
-
-            }
-*/
-            var mapp = {{ map|safe }};
-            console.log(typeof mapp);
-            document.write("<table style='width=10%' align='center' cellspacing='0' cellpadding='0'>");
-            for (var i = 0; i < 11; i++){
-                document.write("<tr>");
-                for (var j = 0; j < 11; j++){
-                    document.write("<td>");
-                    if (mapp[i][j] == 'r'){
-                        document.write("<img src='{% static '../../static/road.png' %}' alt='R'>");
-                        //mapp[i][j] = 'R';
+                    if (e.keyCode == '38') {
+                        // up arrow
+                        //alert('up');
+                        $.ajax({
+                            url: '/game/?dir=u',
+                            type: 'GET',
+                            success: function (response) {
+                                response = JSON.parse(response);
+                                mapp = response['map'];
+                                score = response['scoreboard'];
+                                writer(mapp, score);
+                            }
+                        });
                     }
-                    else if(mapp[i][j]=='P'){
-                        document.write("<img src='{% static '../../static/pacman.png' %}' alt='P'>");
+                    else if (e.keyCode == '40') {
+                        // down arrow
+                        $.ajax({
+                            url: '/game/?dir=d',
+                            type: 'GET',
+                            success: function (response) {
+                                response = JSON.parse(response);
+                                mapp = response['map'];
+                                score = response['scoreboard'];
+                                writer(mapp, score);
+                            }
+                        });
                     }
-                    else if(mapp[i][j]=='G'){
-                        document.write("<img src='{% static '../../static/ghost.png' %}' alt='G'>");
+                    else if (e.keyCode == '37') {
+                       // left arrow
+                        $.ajax({
+                            url: '/game/?dir=l',
+                            type: 'GET',
+                            success: function (response) {
+                                response = JSON.parse(response);
+                                mapp = response['map'];
+                                score = response['scoreboard'];
+                                writer(mapp, score);
+                            }
+                        });
                     }
-                    else if(mapp[i][j]=='X'){
-                        document.write("<img src='{% static '../../static/wall.png' %}' alt='W'>");
-                    }
-                    else if(mapp[i][j]=='A'){
-                        document.write("<img src='{% static '../../static/apple.png' %}' alt='A'>");
-                    }
-                    else if(mapp[i][j]=='T'){
-                        document.write("<img src='{% static '../../static/potato.png' %}' alt='T'>");
-                    }
-                    else if(mapp[i][j]=='B'){
-                        document.write("<img src='{% static '../../static/banana.png' %}' alt='B'>");
+                    else if (e.keyCode == '39') {
+                       // right arrow
+                        $.ajax({
+                            url: '/game/?dir=r',
+                            type: 'GET',
+                            success: function (response) {
+                                response = JSON.parse(response);
+                                mapp = response['map'];
+                                score = response['scoreboard'];
+                                writer(mapp, score);
+                            }
+                        });
                     }
 
                 }
-                //document.write("<br>");
-                document.write("</td>");
-                document.write("</tr>");
-            }
-            document.write("</table>");
-            document.write("<br>");
-            score={{scoreboard|safe }};
-            document.write("#############SCOREBOARD#############");
-            document.write("<table style='width=10%'>");
-            document.write("<br>");
-            document.write("<tr>");
-            for(var i = 0; i<score[0].length;i++ ){
-                //document.write("<td>");
-                document.write(score[0][i]+"   " + score[1][i] );
-                document.write("<br/>");
 
-            }
-            //document.write("</td>");
-            document.write("</tr>");
-            document.write("</table>");
+                //if(isKeyPressed==false){
+                    mapp = {{ map|safe }};
+                    score={{scoreboard|safe }};
+                    writer(mapp, score);
+                //}
+                //isKeyPressed=true;
+                console.log(typeof mapp);
+
+
+                function writer(mapp, score){
+                    console.log(mapp);
+                    console.log(score);
+                    document.write("<table style='width=10%' align='center' cellspacing='0' cellpadding='0'>");
+                    for (var i = 0; i < 11; i++){
+                        document.write("<tr>");
+                        for (var j = 0; j < 11; j++){
+                            document.write("<td>");
+                            if (mapp[i][j] == 'r'){
+                                document.write("<img src='{% static '../../static/road.png' %}' alt='R'>");
+                                //mapp[i][j] = 'R';
+                            }
+                            else if(mapp[i][j]=='P'){
+                                document.write("<img src='{% static '../../static/pacmanr.png' %}' alt='P'>");
+                            }
+                            else if(mapp[i][j]=='G'){
+                                document.write("<img src='{% static '../../static/ghost.png' %}' alt='G'>");
+                            }
+                            else if(mapp[i][j]=='X'){
+                                document.write("<img src='{% static '../../static/wall.png' %}' alt='W'>");
+                            }
+                            else if(mapp[i][j]=='A'){
+                                document.write("<img src='{% static '../../static/apple.png' %}' alt='A'>");
+                            }
+                            else if(mapp[i][j]=='T'){
+                                document.write("<img src='{% static '../../static/potato.png' %}' alt='T'>");
+                            }
+                            else if(mapp[i][j]=='B'){
+                                document.write("<img src='{% static '../../static/banana.png' %}' alt='B'>");
+                            }
+
+                        }
+                        //document.write("<br>");
+                        document.write("</td>");
+                        document.write("</tr>");
+                    }
+                    document.write("</table>");
+                    document.write("<br>");
+
+                    document.write("#############SCOREBOARD#############");
+                    document.write("<table style='width=10%'>");
+                    document.write("<br>");
+                    document.write("<tr>");
+                    for(var i = 0; i<score[0].length;i++ ){
+                        //document.write("<td>");
+                        document.write(score[0][i]+"   " + score[1][i] );
+                        document.write("<br/>");
+
+                    }
+                    //document.write("</td>");
+                    document.write("</tr>");
+                    document.write("</table>");
+                }
+
+            //});
         </script>
         <form action="/game/" method="GET">
             <input type="hidden" name="dir" value="l" />
