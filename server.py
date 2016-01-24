@@ -138,7 +138,7 @@ class Agent(Thread):
                except:
                   print "olmadi......"
          
-         elif self.command[0]=="l" or self.command[0]=="r" or self.command[0]=="u" or self.command[0]=="d":
+         elif self.command[0]=="l" or self.command[0]=="r" or self.command[0]=="u" or self.command[0]=="d" or self.command[0]=="/":
             self.dead = False
             #print "before move"
             #print self.p.type, self.p.coordinate.x, self.p.coordinate.y
@@ -154,8 +154,8 @@ class Agent(Thread):
                #print self.a["map"]
                
             if not self.dead :   
-               
-               self.env.move(self.p,self.command[0])
+               if self.command[0] != "/":
+                   self.env.move(self.p,self.command[0])
                #print "after move"
                #print self.p.name,self.p.type, self.p.coordinate.x, self.p.coordinate.y
                #print "bizim canimiz yanmaz gardas"
@@ -163,15 +163,9 @@ class Agent(Thread):
                #print self.a["map"]
                self.out= json.dumps(self.a)
                self.connection.send(self.out)
-               
-            #print "nevrim dondu"
-         
+                        
          
          else:
-                  
-          #  self.a={"map":self.env.map,"scoreboard":self.env.getScoreBoard()}
-           # self.out = pickle.dumps(self.a)
-           # if not self.out: break
             try:
                self.connection.send("Invalid command...")
             except socket.error:

@@ -24,7 +24,7 @@ def mainpage(request):
     return render(request, 'main/mainpage.html')
 
 
-def qquit(request):
+def quit(request):
     global sessions
     s=sessions[request.session["oguzhan"]]
     s.send("quit")
@@ -47,8 +47,10 @@ def game(request):
 
     if request.is_ajax():
         dir = request.build_absolute_uri()[-1]
+        print "dir", dir
         s.send(dir)
         response = s.recv(1000000)
+        print response
         response = json.loads(response)
         for i in range(0,len(response['map'])):
             for j in range(0,len(response['map'][i])):
@@ -79,14 +81,6 @@ def game(request):
             message = "<b>Life hurts a lot more than death. Have a nice day.</b>"
             return render(request, 'main/game.html', {'message': message})
         else:
-            #data = request.GET
-            #print "datammm: ", data
-            #s.send(data['dir'][0])
-
-            #data = pickle.loads(data)
-            #print "data: ", data
-            #data['message'] = "yes"
-            #context = {'data':data}
             return render(request, 'main/game.html', response)
     else:
 
@@ -105,13 +99,14 @@ def game(request):
 
             for i in range (0,len(response['scoreboard'][0])):
                 response['scoreboard'][0][i] = response['scoreboard'][0][i].encode('utf8')
+            response['scoreboard'] = zip(response['scoreboard'][0], response['scoreboard'][1])
 
-            print "asasd ", response
             if response['message'] == "Player is created successfully.":
                 sessions[name]=s
                 request.session["oguzhan"]=name
                 print "ress: ", response
                 response['message']="yes"
+                response['range'] = range(11)
                 return render(request,'main/game.html',response)
 
         else: # signup
@@ -130,15 +125,16 @@ def game(request):
                     for j in range(0,len(response['map'][i])):
                         response['map'][i][j] = response['map'][i][j].encode('utf8')
 
+                #print 'map-> ', response['map']
                 for i in range (0,len(response['scoreboard'][0])):
                     response['scoreboard'][0][i] = response['scoreboard'][0][i].encode('utf8')
-
+                response['scoreboard'] = zip(response['scoreboard'][0], response['scoreboard'][1])
 
                 print "resp: ", response
                 response['message']="yes"
                 print "burada"
                 print response['map'][0]
-
+                response['range'] = range(11)
                 return render(request,'main/game.html',response)
         #s.close()
         print 'data: '+data['name']

@@ -5,14 +5,6 @@
     <meta charset="UTF-8">
     <title>Game</title>
     <style>
-        table, tr, td {
-            border: none;
-            border-width:0px;
-            border-collapse: collapse;
-            border-spacing: 0;
-            margin: 0;
-            padding: 0;
-        }
         img {margin:0;padding:0; display:block;}
     </style>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
@@ -20,10 +12,116 @@
 <body>
      {% if message == "This username already exists." %}
         {{ message }}
-    {% else %}
-        <script>
+     {% else %}
+         <div id="map">
+            <table style='width:10%' align='center' cellspacing='0' cellpadding='0'>
+            {% for i in map %}
+                <tr>
+                {% for j in i  %}
+                    <td>
+
+                    {% if j == 'r' %}
+                        <img src='{% static '../../static/road.png' %}' alt='R'>
+                    {% elif j == 'P' %}
+                        <img src='{% static '../../static/pacmanr.png' %}' alt='P'>
+                    {% elif j == 'G' %}
+                        <img src='{% static '../../static/ghost.png' %}' alt='G'>
+                    {% elif j == 'X' %}
+                        <img src='{% static '../../static/wall.png' %}' alt='W'>
+                    {% elif j == 'A' %}
+                        <img src='{% static '../../static/apple.png' %}' alt='A'>
+                    {% elif j == 'T' %}
+                        <img src='{% static '../../static/potato.png' %}' alt='T'>
+                    {% elif j == 'B' %}
+                        <img src='{% static '../../static/banana.png' %}' alt='B'>
+
+                    {% endif %}
+                {% endfor %}
+                </td>
+                </tr>
+            {% endfor %}
+            </table>
+            <p>#############SCOREBOARD#############</p>
+            <table border="1" frame="void" rules="rows" style='width:20%'>
+                <tr>
+                {% for i in scoreboard %}
+                    <tr>
+                        <td>{{ i.0 }}</td>
+                        <td>{{ i.1 }}</td>
+                    </tr>
+                {% endfor %}
+                </tr>
+            </table>
+
+         </div>
+         <script>
+                function executeQuery() {
+                  $.ajax({
+                    url: '/game/',
+                    success: function(response) {
+                        response = JSON.parse(response);
+                        map=response['map'];
+                        score=response['scoreboard'];
+                        document.getElementById('map').innerHTML = writer(map,score);
+                    }
+                  });
+                  setTimeout(executeQuery, 3000);
+                }
+                setTimeout(executeQuery, 3000);
             //$(document).ready(function(){
                 //isKeyPressed=false;
+                function writer(map,score){
+                    myhtml="";
+                    myhtml+="<table style='width=10%' align='center' cellspacing='0' cellpadding='0'>";
+                    for (var i = 0; i < 11; i++){
+                        myhtml+="<tr>";
+                        for (var j = 0; j < 11; j++){
+                            myhtml+=("<td>");
+                            if (map[i][j] == 'r'){
+                                myhtml+=("<img src='{% static '../../static/road.png' %}' alt='R'>");
+                                //mapp[i][j] = 'R';
+                            }
+                            else if(map[i][j]=='P'){
+                                myhtml+=("<img src='{% static '../../static/pacmanr.png' %}' alt='P'>");
+                            }
+                            else if(map[i][j]=='G'){
+                                myhtml+=("<img src='{% static '../../static/ghost.png' %}' alt='G'>");
+                            }
+                            else if(map[i][j]=='X'){
+                                myhtml+=("<img src='{% static '../../static/wall.png' %}' alt='W'>");
+                            }
+                            else if(map[i][j]=='A'){
+                                myhtml+=("<img src='{% static '../../static/apple.png' %}' alt='A'>");
+                            }
+                            else if(map[i][j]=='T'){
+                                myhtml+=("<img src='{% static '../../static/potato.png' %}' alt='T'>");
+                            }
+                            else if(map[i][j]=='B'){
+                                myhtml+=("<img src='{% static '../../static/banana.png' %}' alt='B'>");
+                            }
+
+                        }
+                        //document.write("<br>");
+                        myhtml+=("</td>");
+                        myhtml+=("</tr>");
+                    }
+                    myhtml+=("</table>");
+                    myhtml+=("<br>");
+
+                    myhtml+="<p>#############SCOREBOARD#############</p>";
+
+                    myhtml+=("<table border="+1+" frame='void' rules='rows' style='width:20%'>");
+                    myhtml+=("<tr>");
+                    for(var i = 0; i<score[0].length;i++ ){
+                        myhtml+="<tr>";
+                        myhtml+="<td>"+score[0][i]+"</td>";
+                        myhtml+="<td>"+score[1][i]+"</td>";
+                        myhtml+="</tr>";
+                    }
+                    myhtml+=("</tr>");
+                    myhtml+=("</table>");
+                    return myhtml;
+                }
                 document.onkeydown = checkKey;
                 function checkKey(e) {
                     //isKeyPressed=true;
@@ -38,9 +136,9 @@
                             type: 'GET',
                             success: function (response) {
                                 response = JSON.parse(response);
-                                mapp = response['map'];
-                                score = response['scoreboard'];
-                                writer(mapp, score);
+                                map=response['map'];
+                                score=response['scoreboard'];
+                                document.getElementById('map').innerHTML = writer(map,score);
                             }
                         });
                     }
@@ -51,9 +149,9 @@
                             type: 'GET',
                             success: function (response) {
                                 response = JSON.parse(response);
-                                mapp = response['map'];
-                                score = response['scoreboard'];
-                                writer(mapp, score);
+                                map=response['map'];
+                                score=response['scoreboard'];
+                                document.getElementById('map').innerHTML = writer(map,score);
                             }
                         });
                     }
@@ -64,9 +162,9 @@
                             type: 'GET',
                             success: function (response) {
                                 response = JSON.parse(response);
-                                mapp = response['map'];
-                                score = response['scoreboard'];
-                                writer(mapp, score);
+                                map=response['map'];
+                                score=response['scoreboard'];
+                                document.getElementById('map').innerHTML = writer(map,score);
                             }
                         });
                     }
@@ -77,96 +175,17 @@
                             type: 'GET',
                             success: function (response) {
                                 response = JSON.parse(response);
-                                mapp = response['map'];
-                                score = response['scoreboard'];
-                                writer(mapp, score);
+                                map=response['map'];
+                                score=response['scoreboard'];
+                                document.getElementById('map').innerHTML = writer(map,score);
                             }
                         });
                     }
 
                 }
 
-                //if(isKeyPressed==false){
-                    mapp = {{ map|safe }};
-                    score={{scoreboard|safe }};
-                    writer(mapp, score);
-                //}
-                //isKeyPressed=true;
-                console.log(typeof mapp);
-
-
-                function writer(mapp, score){
-                    console.log(mapp);
-                    console.log(score);
-                    document.write("<table style='width=10%' align='center' cellspacing='0' cellpadding='0'>");
-                    for (var i = 0; i < 11; i++){
-                        document.write("<tr>");
-                        for (var j = 0; j < 11; j++){
-                            document.write("<td>");
-                            if (mapp[i][j] == 'r'){
-                                document.write("<img src='{% static '../../static/road.png' %}' alt='R'>");
-                                //mapp[i][j] = 'R';
-                            }
-                            else if(mapp[i][j]=='P'){
-                                document.write("<img src='{% static '../../static/pacmanr.png' %}' alt='P'>");
-                            }
-                            else if(mapp[i][j]=='G'){
-                                document.write("<img src='{% static '../../static/ghost.png' %}' alt='G'>");
-                            }
-                            else if(mapp[i][j]=='X'){
-                                document.write("<img src='{% static '../../static/wall.png' %}' alt='W'>");
-                            }
-                            else if(mapp[i][j]=='A'){
-                                document.write("<img src='{% static '../../static/apple.png' %}' alt='A'>");
-                            }
-                            else if(mapp[i][j]=='T'){
-                                document.write("<img src='{% static '../../static/potato.png' %}' alt='T'>");
-                            }
-                            else if(mapp[i][j]=='B'){
-                                document.write("<img src='{% static '../../static/banana.png' %}' alt='B'>");
-                            }
-
-                        }
-                        //document.write("<br>");
-                        document.write("</td>");
-                        document.write("</tr>");
-                    }
-                    document.write("</table>");
-                    document.write("<br>");
-
-                    document.write("#############SCOREBOARD#############");
-                    document.write("<table style='width=10%'>");
-                    document.write("<br>");
-                    document.write("<tr>");
-                    for(var i = 0; i<score[0].length;i++ ){
-                        //document.write("<td>");
-                        document.write(score[0][i]+"   " + score[1][i] );
-                        document.write("<br/>");
-
-                    }
-                    //document.write("</td>");
-                    document.write("</tr>");
-                    document.write("</table>");
-                }
-
             //});
         </script>
-        <form action="/game/" method="GET">
-            <input type="hidden" name="dir" value="l" />
-            <input type="submit" value="Left">
-        </form>
-        <form action="/game/" method="GET">
-            <input type="hidden" name="dir" value="r" />
-            <input type="submit" value="Right">
-        </form>
-        <form action="/game/" method="GET">
-            <input type="hidden" name="dir" value="u" />
-            <input type="submit" value="Up">
-        </form>
-        <form action="/game/" method="GET">
-            <input type="hidden" name="dir" value="d" />
-            <input type="submit" value="Down">
-        </form>
         <form action="/quit/" method="GET">
 
             <input type="submit" value="Quit">

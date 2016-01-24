@@ -10,5 +10,5 @@ urlpatterns = [
     url(r'^game/?dir=l/$', views.game, name='game'),
     url(r'^game/?dir=u/$', views.game, name='game'),
     url(r'^game/?dir=d/$', views.game, name='game'),
-    url(r'^quit', views.qquit, name='quit'),
+    url(r'^quit', views.quit, name='quit'),
 ]
