@@ -413,7 +413,7 @@ class Environment(object):
                         self.freelock(current,next)
                         return
                     elif self.map[player.coordinate.x+1][player.coordinate.y] == 'X':
-                        if player.level == 3:
+                        if player.level == 3 or player.level ==2:
                             del self.playerDict[player.coordinate.key]
                             player.coordinate.x += 1
                             player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
@@ -478,7 +478,7 @@ class Environment(object):
                         self.freelock(current,next)
                         return
                     elif self.map[player.coordinate.x][player.coordinate.y+1] == 'X':
-                        if player.level == 3:
+                        if player.level == 3 or player.level == 2:
                             del self.playerDict[player.coordinate.key]
                             player.coordinate.y += 1
                             player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
@@ -542,7 +542,7 @@ class Environment(object):
                         self.freelock(current,next)
                         return
                     elif self.map[player.coordinate.x-1][player.coordinate.y] == 'X':
-                        if player.level == 3:
+                        if player.level == 3 or player.level == 2:
                             del self.playerDict[player.coordinate.key]
                             player.coordinate.x -= 1
                             player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
@@ -608,7 +608,7 @@ class Environment(object):
                         self.freelock(current,next)
                         return
                     elif self.map[player.coordinate.x][player.coordinate.y-1] == 'X':
-                        if player.level == 3:
+                        if player.level == 3 or player.level == 2:
                             del self.playerDict[player.coordinate.key]
                             player.coordinate.y -= 1
                             player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)

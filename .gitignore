@@ -13,7 +13,7 @@ __pycache__/
 
 #project pacman specific
 pickle/*
-pacman/db.sqlite3
+pacman/db*
 
 # Distribution / packaging
 .Python
