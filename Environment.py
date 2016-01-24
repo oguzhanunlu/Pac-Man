@@ -9,7 +9,7 @@ from Road import *
 from threading import *
 
 lock=Lock()
-locked = [[True for i in xrange(40)] for i in xrange(40)]
+locked = [[True for i in xrange(1000)] for i in xrange(1000)]
 cond = Condition(lock)
 
 
@@ -25,7 +25,7 @@ class Environment(object):
         self.forageDict = {}
         self.roadDict = {}
         #self.map = [['X','X','X','X'],['X','X','X','X'],['X','X','X','X'],['X','X','X','X']]
-        self.map = [["X" for i in xrange(40)] for i in xrange(40)]
+        self.map = [["X" for i in xrange(1000)] for i in xrange(1000)]
         self.usernames = []
         
     def getlock(self,c1,c2):
@@ -127,19 +127,19 @@ class Environment(object):
         del player
     
     def mapGenerator(self):
-        for i in range(0,40,10):
-            self.map[i] = ['r']*40
+        for i in range(0,1000,10):
+            self.map[i] = ['r']*1000
             #print self.map[i]
-        for i in range(0,40,10):
-            for j in range(0,40):
+        for i in range(0,1000,10):
+            for j in range(0,1000):
                 self.map[j][i] = 'r'                    
-                self.map[39] = ['r']*40
-            for j in range(0,40):
-                self.map[j][39] = 'r'
+                self.map[999] = ['r']*1000
+            for j in range(0,1000):
+                self.map[j][999] = 'r'
     def sendPlayerRandom(self, player):
-        i = random.randrange(0,4)
+        i = random.randrange(0,100)
         i *= 10
-        for j in range(0,40):
+        for j in range(0,1000):
             if self.map[i][j] == "r":
                 player.coordinate.x = i
                 player.coordinate.y = j
@@ -171,8 +171,8 @@ class Environment(object):
     
     def getAllMap(self):
     
-        for i in range(0,40):
-            for j in range(0,40):
+        for i in range(0,1000):
+            for j in range(0,1000):
                 print self.map[i][j],
             print
    
@@ -191,16 +191,16 @@ class Environment(object):
             bufx=x1
             tufx=-bufx
             x1 = 0
-        elif x2 > 39:
-            bufx=x2-39
-            x2 = 39
+        elif x2 > 999:
+            bufx=x2-999
+            x2 = 999
         if y1 <= 0:
             bufy=y1
             tufy=-bufy
             y1 = 0
-        elif y2 > 39:
-            bufy=y2-39
-            y2 = 39
+        elif y2 > 999:
+            bufy=y2-999
+            y2 = 999
         
         
         #print bufx,bufy,tufx,tufy
@@ -214,7 +214,7 @@ class Environment(object):
         if player.type == "Ghost":
             if direction == "d":
                 
-                if player.coordinate.x + 1 < 40:
+                if player.coordinate.x + 1 < 1000:
                 
                     next = Coordinate(player.coordinate.x+1,player.coordinate.y)
                     current = Coordinate(player.coordinate.x,player.coordinate.y)
@@ -260,7 +260,7 @@ class Environment(object):
                 else:
                     return
             elif direction == "r":
-                if player.coordinate.y + 1 < 40:
+                if player.coordinate.y + 1 <1000:
                     next = Coordinate(player.coordinate.x,player.coordinate.y+1)
                     current = Coordinate(player.coordinate.x,player.coordinate.y)
                     self.getlock(player.coordinate,next)
@@ -404,7 +404,7 @@ class Environment(object):
                     return
         elif player.type == "Pacman":
             if direction == "d":
-                if player.coordinate.x + 1 < 40:
+                if player.coordinate.x + 1 < 1000:
                     next = Coordinate(player.coordinate.x+1,player.coordinate.y)
                     current = Coordinate(player.coordinate.x,player.coordinate.y)
                     self.getlock(player.coordinate,next)
@@ -469,7 +469,7 @@ class Environment(object):
                 else:
                     return                   
             elif direction == "r":
-                if player.coordinate.y + 1 < 40:
+                if player.coordinate.y + 1 < 1000:
                     next = Coordinate(player.coordinate.x,player.coordinate.y+1)
                     current = Coordinate(player.coordinate.x,player.coordinate.y)
                     self.getlock(player.coordinate,next)

@@ -17,36 +17,36 @@ class Agent(Thread):
       env.mapGenerator()
       counter=0
       while 1:
-         j = random.randrange(0,40)
-         k= random.randrange(0,40)         
+         j = random.randrange(0,1000)
+         k= random.randrange(0,1000)         
          if env.map[j][k]=='r':
             c=Coordinate(j,k)
             forage=ForageFactory().new("Tomato",c)
             env.addForage(forage)
             counter+=1
-            if counter ==10:
+            if counter ==320:
                break
       counter=0           
       while 1:
-         j = random.randrange(0,40)
-         k= random.randrange(0,40)
+         j = random.randrange(0,1000)
+         k= random.randrange(0,1000)
          if env.map[j][k]=='r':
             c=Coordinate(j,k)
             forage=ForageFactory().new("Banana",c)
             env.addForage(forage)
             counter+=1
-            if counter ==20:
+            if counter ==640:
                break
       counter=0           
       while 1:
-         j = random.randrange(0,40)
-         k= random.randrange(0,40)
+         j = random.randrange(0,1000)
+         k= random.randrange(0,1000)
          if env.map[j][k]=='r':
             c=Coordinate(j,k)
             forage=ForageFactory().new("Apple",c)
             env.addForage(forage)
             counter+=1
-            if counter ==40:
+            if counter ==1280:
                break        
       env.getAllMap()             
    except:
@@ -60,10 +60,10 @@ class Agent(Thread):
       self.cont = False
    def randomCoordinate(self,kind):
        while(1):
-         i = random.randrange(0,4)
+         i = random.randrange(0,100)
          i *= 10
-         j = random.randrange(0,40)
-         if i<2 or i>37 or j<2 or j > 37:
+         j = random.randrange(0,1000)
+         if i<2 or i>997 or j<2 or j > 997:
             continue
          if(kind == "Ghost"):
          

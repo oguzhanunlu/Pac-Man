@@ -21,6 +21,45 @@
         {{ message }}
     {% else %}
         <script>
+            var mapp;
+            var score;
+           /* function httpGetAsync(theUrl)
+            {
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.onreadystatechange = function() {
+                    if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                        mapp=xmlHttp.responseText['map'];
+                        console.log(mapp);
+                        score=xmlHttp.responseText['scoreboard'];
+                }
+                xmlHttp.open("GET", theUrl, true); // true for asynchronous
+                xmlHttp.send(null);
+            }
+            document.onkeydown = checkKey;
+            function checkKey(e) {
+
+                e = e || window.event;
+
+                if (e.keyCode == '38') {
+                    // up arrow
+                alert("up");
+               //     httpGetAsync('/?dir=u',{{map|safe}});
+
+                }
+                else if (e.keyCode == '40') {
+                    // down arrow
+                }
+                else if (e.keyCode == '37') {
+                   // left arrow
+                    alert("left");
+                    httpGetAsync('/?dir=l');
+                }
+                else if (e.keyCode == '39') {
+                   // right arrow
+                }
+
+            }
+*/
             var mapp = {{ map|safe }};
             console.log(typeof mapp);
             document.write("<table style='width=10%' align='center' cellspacing='0' cellpadding='0'>");
