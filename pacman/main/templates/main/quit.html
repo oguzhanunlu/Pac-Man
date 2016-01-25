@@ -1,11 +1,26 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Good bye</title>
+    <style>
+        h1 {
+            font-family: "Arial" ;
+        }
+        body {
+            display: inline-block;
+            margin: 0px auto;
+            text-align: center;
+        }
+        html {
+            text-align: center;
+        }
+    </style>
     <meta http-equiv="refresh" content="5;url=/" />
 </head>
-<body>
-It is not a goodbye. See you later.
+<body bgcolor="black">
+    <img src='{% static '../../static/quit.png' %}' alt='It is not a goodbye, see you later!'>
+    <h1 style="color: yellow">It is not a goodbye, see you later!</h1>
 </body>
 </html>
