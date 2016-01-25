@@ -141,8 +141,10 @@ class Environment(object):
         i *= 10
         for j in range(0,1000):
             if self.map[i][j] == "r":
+                del self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)]
                 player.coordinate.x = i
                 player.coordinate.y = j
+                
                 player.coordinate.key=str(i)+'.'+str(j)
                 self.playerDict[player.coordinate.key]=player
                 self.map[i][j] = player.type[0]
