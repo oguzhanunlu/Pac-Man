@@ -7,6 +7,14 @@
         <style>
         h1 {
             font-family: "Arial" ;
+            color: orangered;
+        }
+        p {
+            font-size: 20px;
+        }
+        form {
+            display: inline-table;
+            margin-top: 5px;
         }
         body {
             display: inline-block;
@@ -26,17 +34,32 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <div style="float:left; margin:5px; display:inline;">
+    <div id="form" style="margin:5px; display:inline;">
     <form action="signin/">
          <button type="submit" style="background-color: orange;width: 70px ;color: #000;"   class="btn btn-success">Sign In</button>
     </form>
     </div>
 
-    <div style="float:left;margin:5px; display:inline;">
+    <div id="form" style="margin:5px; display:inline;">
     <form action="signup/">
         <button type="submit" style="background-color: orange;width: 70px;color: #000 " class="btn btn-success">Sign Up</button>
-
     </form>
-        </div>
+    </div>
+
+    <h1 style="color: orangered;">
+       How to play?
+    </h1>
+    <p style="color: yellow">
+        There are 2 types of player in this game as it is in phenomenon game, Pacman.<br>
+        <b>Pacman</b><br>
+        It has 3 levels. You start at level 1 and can eat only apples. If you manage to earn 21 points, congrulations!
+        You made it to level 2! Now you'd like to try breaking some walls or tasting bananas. If you are dedicated enough and earn 250 points,
+        then hooooray! You just conquered the world of Pacman. Enjoy beating ghosts.<br>
+        <t>Revenge is a dish best served cold.</t><br>
+        <b>Ghost</b><br>
+        So you choose dark side, huh? Do you like risks? Fine, but be careful when you eat pacmans, cause they might be
+        level 3, which means they eat you. Just a friendly reminder, if you are eaten, half of your points will melt away.
+        What would life be like if there is no risk at all?
+    </p>
 </body>
 </html>
