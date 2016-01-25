@@ -55,6 +55,8 @@
 
          </div>
          <script>
+
+                way="r";
                 function executeQuery() {
                   $.ajax({
                     url: '/game/',
@@ -62,7 +64,7 @@
                         response = JSON.parse(response);
                         map=response['map'];
                         score=response['scoreboard'];
-                        document.getElementById('map').innerHTML = writer(map,score);
+                        document.getElementById('map').innerHTML = writer(map,score,way);
                     }
                   });
                   setTimeout(executeQuery, 3000);
@@ -70,7 +72,7 @@
                 setTimeout(executeQuery, 3000);
             //$(document).ready(function(){
                 //isKeyPressed=false;
-                function writer(map,score){
+                function writer(map,score,w){
                     myhtml="";
                     myhtml+="<table style='width=10%' align='center' cellspacing='0' cellpadding='0'>";
                     for (var i = 0; i < 11; i++){
@@ -82,7 +84,24 @@
                                 //mapp[i][j] = 'R';
                             }
                             else if(map[i][j]=='P'){
-                                myhtml+=("<img src='{% static '../../static/pacmanr.png' %}' alt='P'>");
+                                if (w=='l'){
+                                    way='l';
+                                    myhtml+=("<img src='{% static '../../static/pacmanl.png' %}' alt='P'>");
+                                }
+                                else if (w=='r'){
+                                    way='r';
+                                    myhtml+=("<img src='{% static '../../static/pacmanr.png' %}' alt='P'>");
+                                }
+                                else if (w=='u'){
+                                    way='u';
+                                    myhtml+=("<img src='{% static '../../static/pacmanu.png' %}' alt='P'>");
+                                }
+                                else if (w=='d'){
+                                    way='d';
+                                    myhtml+=("<img src='{% static '../../static/pacmand.png' %}' alt='P'>");
+                                }
+
+
                             }
                             else if(map[i][j]=='G'){
                                 myhtml+=("<img src='{% static '../../static/ghost.png' %}' alt='G'>");
@@ -138,7 +157,7 @@
                                 response = JSON.parse(response);
                                 map=response['map'];
                                 score=response['scoreboard'];
-                                document.getElementById('map').innerHTML = writer(map,score);
+                                document.getElementById('map').innerHTML = writer(map,score,'u');
                             }
                         });
                     }
@@ -151,7 +170,7 @@
                                 response = JSON.parse(response);
                                 map=response['map'];
                                 score=response['scoreboard'];
-                                document.getElementById('map').innerHTML = writer(map,score);
+                                document.getElementById('map').innerHTML = writer(map,score,'d');
                             }
                         });
                     }
@@ -164,7 +183,7 @@
                                 response = JSON.parse(response);
                                 map=response['map'];
                                 score=response['scoreboard'];
-                                document.getElementById('map').innerHTML = writer(map,score);
+                                document.getElementById('map').innerHTML = writer(map,score,'l');
                             }
                         });
                     }
@@ -177,7 +196,7 @@
                                 response = JSON.parse(response);
                                 map=response['map'];
                                 score=response['scoreboard'];
-                                document.getElementById('map').innerHTML = writer(map,score);
+                                document.getElementById('map').innerHTML = writer(map,score,'r');
                             }
                         });
                     }
