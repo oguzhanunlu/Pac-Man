@@ -3,12 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>Sign Up</title>
+     <style>
+        h1 {
+            font-family: "Arial" ;
+        }
+        body {
+            display: inline-block;
+            margin: 0px auto;
+            text-align: center;
+            background-image:url('../../static/sign.png');
+            background-size: 100%;
+            background-repeat: no-repeat;
+        }
+        html {
+            text-align: center;
+        }
+
+    </style>
+     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </head>
 <body>
 <form action="/game/" method="POST">
     {% csrf_token %}
     {{ form }}
-    <input type="submit" value="Play">
+    <button type="submit" style="background-color: orange;width: 70px;color: #000;"   class="btn btn-success">Play</button>
 </form>
 </body>
 </html>

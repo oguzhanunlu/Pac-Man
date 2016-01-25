@@ -5,16 +5,25 @@
     <meta charset="UTF-8">
     <title>Game</title>
     <style>
-        img {margin:0;padding:0; display:block;}
+        table {
+            border-collapse: collapse;
+            align: left;
+        }
+
+
     </style>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </head>
-<body>
+<body style="background-color:burlywood;">
      {% if message == "This username already exists." %}
         {{ message }}
      {% else %}
          <div id="map">
-            <table style='width:10%' align='center' cellspacing='0' cellpadding='0'>
+            <div style="float:left; display:inline; margin-right: 20px;">
+            <table  cellspacing='0' cellpadding='0'>
             {% for i in map %}
                 <tr>
                 {% for j in i  %}
@@ -41,8 +50,16 @@
                 </tr>
             {% endfor %}
             </table>
+            </div>
+            <div style="float:left; display:inline;">
             <p>#############SCOREBOARD#############</p>
-            <table border="1" frame="void" rules="rows" style='width:20%'>
+            <div class="table-responsive">
+            <table class="table table-bordred table-striped">
+                <thead>
+                    <th>Name</th>
+                    <th>Score</th>
+                </thead>
+                <tbody>
                 <tr>
                 {% for i in scoreboard %}
                     <tr>
@@ -51,8 +68,10 @@
                     </tr>
                 {% endfor %}
                 </tr>
+                </tbody>
             </table>
-
+            </div>
+            </div>
          </div>
          <script>
 
@@ -74,7 +93,8 @@
                 //isKeyPressed=false;
                 function writer(map,score,w){
                     myhtml="";
-                    myhtml+="<table style='width=10%' align='center' cellspacing='0' cellpadding='0'>";
+                    myhtml+="<div style='float:left; display:inline; margin-right: 20px;'>";
+                    myhtml+="<table style='cellspacing='0' width='10%' cellpadding='0'>";
                     for (var i = 0; i < 11; i++){
                         myhtml+="<tr>";
                         for (var j = 0; j < 11; j++){
@@ -125,11 +145,15 @@
                         myhtml+=("</tr>");
                     }
                     myhtml+=("</table>");
-                    myhtml+=("<br>");
-
+                    myhtml+=("</div>");
+                    //myhtml+=("<br>");
+                    myhtml+=("<div style='float:left; display:inline;'>");
                     myhtml+="<p>#############SCOREBOARD#############</p>";
+                    myhtml+="<div class='table-responsive'>";
+                    myhtml+="<table class='table table-bordred table-striped'>";
+                    myhtml+="<thead>";
+                    myhtml+="<tbody>";
 
-                    myhtml+=("<table border="+1+" frame='void' rules='rows' style='width:20%'>");
                     myhtml+=("<tr>");
                     for(var i = 0; i<score[0].length;i++ ){
                         myhtml+="<tr>";
@@ -139,10 +163,13 @@
                     }
                     myhtml+=("</tr>");
                     myhtml+=("</table>");
+                    myhtml+="</div>";
+                    myhtml+="</div>";
                     return myhtml;
                 }
                 document.onkeydown = checkKey;
                 function checkKey(e) {
+                    e.preventDefault();
                     //isKeyPressed=true;
                     console.log('key pressed');
                     e = e || window.event;
@@ -207,7 +234,7 @@
         </script>
         <form action="/quit/" method="GET">
 
-            <input type="submit" value="Quit">
+             <button type="submit" style="background-color: orange;width: 70px;color: #000;"   class="btn btn-success">Quit</button>
         </form>
     {% endif %}
 </body>

@@ -24,7 +24,7 @@ class Agent(Thread):
             forage=ForageFactory().new("Tomato",c)
             env.addForage(forage)
             counter+=1
-            if counter ==320:
+            if counter ==500:
                break
       counter=0           
       while 1:
@@ -35,7 +35,7 @@ class Agent(Thread):
             forage=ForageFactory().new("Banana",c)
             env.addForage(forage)
             counter+=1
-            if counter ==640:
+            if counter ==1000:
                break
       counter=0           
       while 1:
@@ -46,7 +46,7 @@ class Agent(Thread):
             forage=ForageFactory().new("Apple",c)
             env.addForage(forage)
             counter+=1
-            if counter ==1280:
+            if counter ==2000:
                break        
       #env.getAllMap()             
    except:

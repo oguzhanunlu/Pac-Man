@@ -51,11 +51,11 @@ class Pacman(Player):
         self.frame=[["Q" for i in xrange(11)] for i in xrange(11)]
     
     def levelChanger(self):
-        if self.point<5:
+        if self.point<=20:
             self.level = 1
-        elif self.point>5 and self.point<35:
+        elif self.point>20 and self.point<=250:
             self.level = 2			
-        elif self.point>=35:
+        elif self.point>=250:
             self.level = 3
 #    def levelDown(self):	gerek kalmayabilir
 #       self.level -= 1
