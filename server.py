@@ -9,12 +9,7 @@ import socket
 import time
 import cPickle as pickle
 import json
-
-
-class Agent(Thread):
-   try:
-      env =Environment()
-      env.mapGenerator()
+def fruitCreator(env):
       counter=0
       while 1:
          j = random.randrange(0,1000)
@@ -47,7 +42,13 @@ class Agent(Thread):
             env.addForage(forage)
             counter+=1
             if counter ==2000:
-               break        
+               break    
+
+class Agent(Thread):
+   try:
+      env =Environment()
+      env.mapGenerator()
+      fruitCreator(env)
       #env.getAllMap()             
    except:
       print "geldim XD"
@@ -77,6 +78,9 @@ class Agent(Thread):
 
    def run(self):
       while 1:
+         print len(self.env.forageDict)
+         if len(self.env.forageDict)<500:
+            fruitCreator(self.env)
          self.inp = self.connection.recv(1000000)
          if not self.inp:
             continue

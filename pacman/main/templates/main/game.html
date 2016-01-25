@@ -21,6 +21,7 @@
      {% if message == "This username already exists." %}
         {{ message }}
      {% else %}
+         <div class="row">
          <div id="map">
             <div style="float:left; display:inline; margin-right: 20px;">
             <table  cellspacing='0' cellpadding='0'>
@@ -72,6 +73,7 @@
             </table>
             </div>
             </div>
+         </div>
          </div>
          <script>
 
@@ -126,7 +128,7 @@
                             else if(map[i][j]=='G'){
                                 myhtml+=("<img src='{% static '../../static/ghost.png' %}' alt='G'>");
                             }
-                            else if(map[i][j]=='X'){
+                            else if(map[i][j]=='X' || map[i][j]=='Q' ){
                                 myhtml+=("<img src='{% static '../../static/wall.png' %}' alt='W'>");
                             }
                             else if(map[i][j]=='A'){
@@ -232,10 +234,13 @@
 
             //});
         </script>
+         <div style="margin:5px; display:block; width: 525px;">
+
         <form action="/quit/" method="GET">
 
-             <button type="submit" style="background-color: orange;width: 70px;color: #000;"   class="btn btn-success">Quit</button>
+             <button type="submit" style="background-color: orange;color: #000;"   class="btn btn-block btn-success">Quit</button>
         </form>
+         </div>
     {% endif %}
 </body>
 </html>

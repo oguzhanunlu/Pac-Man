@@ -25,10 +25,12 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </head>
 <body>
+<div style="float:left;margin:5px; display:inline;">
 <form action="/game/" method="POST">
     {% csrf_token %}
     {{ form }}
     <button type="submit" style="background-color: orange;width: 70px;color: #000;"   class="btn btn-success">Play</button>
 </form>
+    </div>
 </body>
 </html>
