@@ -78,7 +78,7 @@ class Agent(Thread):
 
    def run(self):
       while 1:
-         print len(self.env.forageDict)
+         #print len(self.env.forageDict)
          if len(self.env.forageDict)<500:
             fruitCreator(self.env)
          self.inp = self.connection.recv(1000000)
@@ -153,7 +153,9 @@ class Agent(Thread):
                   self.dead = True
             except:      
                self.connection.send("Olmussun yahu")
-               self.env.usernames.remove(self.p.name)
+               self.dead = True
+               #self.env.usernames.remove(self.p.name)
+            
                self.a={"message":"Ogren de gel :) AHAHAHA","map":self.env.getMap(self.p,5,5),"scoreboard":self.env.getScoreBoard()}
                #print self.a["map"]
                

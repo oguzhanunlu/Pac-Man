@@ -82,10 +82,15 @@
                   $.ajax({
                     url: '/game/',
                     success: function(response) {
-                        response = JSON.parse(response);
-                        map=response['map'];
-                        score=response['scoreboard'];
-                        document.getElementById('map').innerHTML = writer(map,score,way);
+                        if(response=="<b><center>Life hurts a lot more than death. Have a nice day.</center></b>"){
+                            document.getElementById('map').innerHTML = response;
+                        }
+                        else{
+                            response = JSON.parse(response);
+                            map=response['map'];
+                            score=response['scoreboard'];
+                            document.getElementById('map').innerHTML = writer(map,score,way);
+                        }
                     }
                   });
                   setTimeout(executeQuery, 3000);
@@ -183,10 +188,15 @@
                             url: '/game/?dir=u',
                             type: 'GET',
                             success: function (response) {
+                            if(response=="<b><center>Life hurts a lot more than death. Have a nice day.</center></b>"){
+                                document.getElementById('map').innerHTML = response;
+                            }
+                            else{
                                 response = JSON.parse(response);
                                 map=response['map'];
                                 score=response['scoreboard'];
                                 document.getElementById('map').innerHTML = writer(map,score,'u');
+                            }
                             }
                         });
                     }
@@ -196,10 +206,15 @@
                             url: '/game/?dir=d',
                             type: 'GET',
                             success: function (response) {
+                                if(response=="<b><center>Life hurts a lot more than death. Have a nice day.</center></b>"){
+                                document.getElementById('map').innerHTML = response;
+                            }
+                            else{
                                 response = JSON.parse(response);
                                 map=response['map'];
                                 score=response['scoreboard'];
                                 document.getElementById('map').innerHTML = writer(map,score,'d');
+                            }
                             }
                         });
                     }
@@ -209,10 +224,15 @@
                             url: '/game/?dir=l',
                             type: 'GET',
                             success: function (response) {
+                                if(response=="<b><center>Life hurts a lot more than death. Have a nice day.</center></b>"){
+                                document.getElementById('map').innerHTML = response;
+                            }
+                            else{
                                 response = JSON.parse(response);
                                 map=response['map'];
                                 score=response['scoreboard'];
                                 document.getElementById('map').innerHTML = writer(map,score,'l');
+                            }
                             }
                         });
                     }
@@ -222,10 +242,15 @@
                             url: '/game/?dir=r',
                             type: 'GET',
                             success: function (response) {
+                                if(response=="<b><center>Life hurts a lot more than death. Have a nice day.</center></b>"){
+                                document.getElementById('map').innerHTML = response;
+                            }
+                            else{
                                 response = JSON.parse(response);
                                 map=response['map'];
                                 score=response['scoreboard'];
                                 document.getElementById('map').innerHTML = writer(map,score,'r');
+                            }
                             }
                         });
                     }

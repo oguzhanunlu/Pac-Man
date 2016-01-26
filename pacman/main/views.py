@@ -51,6 +51,10 @@ def game(request):
         s.send(dir)
         response = s.recv(1000000)
         print response
+        if response == "Olmussun yahu":
+            message = "<b><center>Life hurts a lot more than death. Have a nice day.</center></b>"
+            return HttpResponse(message)
+
         response = json.loads(response)
         for i in range(0,len(response['map'])):
             for j in range(0,len(response['map'][i])):
@@ -59,11 +63,7 @@ def game(request):
         for i in range (0,len(response['scoreboard'][0])):
             response['scoreboard'][0][i] = response['scoreboard'][0][i].encode('utf8')
 
-        if response['message'] == "Olmussun yahu":
-            message = "<b>Life hurts a lot more than death. Have a nice day.</b>"
-            return render(request, 'main/game.html', {'message': message})
-        else:
-            return HttpResponse(json.dumps(response))
+        return HttpResponse(json.dumps(response))
 
     if request.method == "GET":
         dir = request.build_absolute_uri()[-1]

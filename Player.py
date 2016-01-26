@@ -55,7 +55,7 @@ class Pacman(Player):
             self.level = 1
         elif self.point>20 and self.point<=250:
             self.level = 2			
-        elif self.point>=250:
+        elif self.point>250:
             self.level = 3
 #    def levelDown(self):	gerek kalmayabilir
 #       self.level -= 1

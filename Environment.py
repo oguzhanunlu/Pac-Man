@@ -122,6 +122,7 @@ class Environment(object):
         """Deletes player from  given coordinate.
         @param player: Player
         @return: bool, True|False, whether player is deleted succesfully."""
+
         del self.playerDict[player.coordinate.key]
         self.map[player.coordinate.x][player.coordinate.y]='r'
         del player
@@ -211,6 +212,8 @@ class Environment(object):
                 player.frame[k+tufx][l+tufy] = self.map[i][j]
         return player.frame
         
+   
+   
         
     def move(self, player, direction):
         if player.type == "Ghost":
@@ -229,11 +232,12 @@ class Environment(object):
                         if player.canEatPlayer(self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)]):
                             player.point += self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point 
                             self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point /= 2
-                            if self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point < 5:
+                            if self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point < 20:
                                 self.deletePlayer(self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)])
                             else:
                                 self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].levelChanger()
                                 self.sendPlayerRandom(self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)])
+                            del self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)]#
                             player.coordinate.x += 1
                             player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
                             self.playerDict[player.coordinate.key] = player
@@ -274,11 +278,13 @@ class Environment(object):
                         if player.canEatPlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)]):
                             player.point += self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point
                             self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point /= 2
-                            if self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point < 5:
+                            if self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point < 20:
                                 self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)])
                             else:
                                 self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].levelChanger()
                                 self.sendPlayerRandom(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)])
+                            
+                            del self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)]#
                             player.coordinate.y += 1 
                             player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
                             self.playerDict[player.coordinate.key] = player
@@ -320,11 +326,12 @@ class Environment(object):
                         if player.canEatPlayer(self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)]):
                             player.point += self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point 
                             self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point /= 2
-                            if self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point < 5:
+                            if self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point < 20:
                                 self.deletePlayer(self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)])
                             else:
                                 self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].levelChanger()
                                 self.sendPlayerRandom(self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)])
+                            del self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)]#
                             player.coordinate.x -= 1
                             player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
                             self.playerDict[player.coordinate.key] = player
@@ -369,12 +376,13 @@ class Environment(object):
                            
                             player.point += self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point
                             self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point /= 2
-                            if self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point < 5:
+                            if self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point < 20:
                                
                                 self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)])
                             else:
                                 self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].levelChanger()
                                 self.sendPlayerRandom(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)])
+                            del self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)]#
                             player.coordinate.y -= 1
                             player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
                             self.playerDict[player.coordinate.key] = player
@@ -426,6 +434,7 @@ class Environment(object):
                         if player.canEatGhost(self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)]):
                             player.point += self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point 
                             self.deletePlayer(self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)])
+                            del self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)]#
                             player.coordinate.x += 1 
                             player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
                             self.playerDict[player.coordinate.key] = player
@@ -434,7 +443,7 @@ class Environment(object):
                         else:
                             self.playerDict[str(player.coordinate.x+1)+'.'+str(player.coordinate.y)].point+=player.point
                             player.point /= 2
-                            if player.point < 5:
+                            if player.point < 20:
                                 self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)])
                                 self.map[player.coordinate.x][player.coordinate.y]='r'
                             else:
@@ -491,6 +500,7 @@ class Environment(object):
                         if player.canEatGhost(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)]):
                             player.point += self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point 
                             self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)])
+                            del self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)]#
                             player.coordinate.y += 1
                             player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
                             self.playerDict[player.coordinate.key] = player
@@ -499,7 +509,7 @@ class Environment(object):
                         else:
                             self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y+1)].point+=player.point
                             player.point /= 2
-                            if player.point < 5:
+                            if player.point < 20:
                                 self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)])
                                 self.map[player.coordinate.x][player.coordinate.y]='r'
                             else:
@@ -557,6 +567,7 @@ class Environment(object):
                            
                             player.point += self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point 
                             self.deletePlayer(self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)])
+                            del self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)]#
                             player.coordinate.x -= 1 
                             player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y)
                             self.playerDict[player.coordinate.key] = player
@@ -565,7 +576,7 @@ class Environment(object):
                         else:
                             self.playerDict[str(player.coordinate.x-1)+'.'+str(player.coordinate.y)].point+=player.point
                             player.point /= 2
-                            if player.point < 5:
+                            if player.point < 20:
                                 self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)])
                                 self.map[player.coordinate.x][player.coordinate.y]='r'
                             else:
@@ -621,6 +632,7 @@ class Environment(object):
                         if player.canEatGhost(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)]):
                             player.point += self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point 
                             self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)])
+                            del self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)]#
                             player.coordinate.y -= 1
                             player.coordinate.key=str(player.coordinate.x)+'.'+str(player.coordinate.y) 
                             self.playerDict[player.coordinate.key] = player
@@ -629,7 +641,7 @@ class Environment(object):
                         else:
                             self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y-1)].point+=player.point
                             player.point /= 2
-                            if player.point < 5:
+                            if player.point < 20:
                                 self.deletePlayer(self.playerDict[str(player.coordinate.x)+'.'+str(player.coordinate.y)])
                                 self.map[player.coordinate.x][player.coordinate.y]='r'
                             else:
