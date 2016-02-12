@@ -2,6 +2,8 @@
 
 Pac-Man is an old yet phenomenal game. We wanted to keep the spirit alive as engineers and developed a multiplayer version of the original game. We aimed nothing but brushing up our knowledge on web development.
 
+<img src="https://github.com/oguzhanunlu/Pac-Man/blob/master/ss.png" >
+
 ## Motivation
 
 We are students of [the Department of Computer Engineering](http://www.ceng.metu.edu.tr/) at [Middle East Technical University](http://www.metu.edu.tr/). We both took [CENG498 course](http://www.ceng.metu.edu.tr/course/ceng498/index) during Fall 15 and developed this project as course project.
