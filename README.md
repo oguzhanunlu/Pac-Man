@@ -15,6 +15,16 @@ We are students of [the Department of Computer Engineering](http://www.ceng.metu
 
 This project is composed of a Python library (see `server.py`) and a Django project (see `pacman/`).
 
+**Important Notice** 
+
+You are likely to see a Django error like below, 
+```
+You have unapplied migrations; your app may not work properly until they are applied.
+Run 'python manage.py migrate' to apply them.
+```
+To fix that, simply running `python manage.py migrate` command at main directory of Django project, `pacman/` , is enough. Now you are safe to go.
+
+
 - Run library first, `python server.py`
 - Fire up another terminal window, `CTRL+SHIFT+T` on Ubuntu
 - Time to run Django project now, `cd pacman && python manage.py runserver 0:8000`
